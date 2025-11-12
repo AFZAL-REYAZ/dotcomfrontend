@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Smartphone, Laptop, Tablet, Watch, Headphones, Plug, Gamepad2, Camera } from 'lucide-react'
 import Carousel from '../components/Carousel'
-import LocationPopup from '../components/LocationPopup'
+// import LocationPopup from '../components/LocationPopup'
 
 const categories = [
   { name: 'Smartphones', emoji: '📱' },
@@ -91,15 +91,6 @@ const Home = () => {
 
       {/* Carousel Section with fullscreen trigger */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">Highlights</h2>
-          <button
-            onClick={() => setShowCarouselFullscreen(true)}
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
-          >
-            Fullscreen
-          </button>
-        </div>
         <div className="mt-4">
           <Carousel />
         </div>

@@ -20,7 +20,7 @@ export default function Carousel({ className = "" }) {
   }, []);
 
   // Always fullscreen
-  const containerClasses = "relative w-full h-screen overflow-hidden rounded-none shadow-none ";
+  const containerClasses = "relative w-full h-[60vh] overflow-hidden rounded-none shadow-none ";
   const imageClasses = "w-full h-screen object-cover";
 
   return (

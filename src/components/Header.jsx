@@ -24,15 +24,16 @@ const Header = () => {
 
         {/* Right: account + wishlist + bag */}
         <div className="flex items-center gap-3 sm:gap-4">
-          <Link to="/pay-with-reward" className="p-2 rounded-md hover:bg-gray-100 text-black" aria-label="Cart" title="Cart">
+          {/* <Link to="/pay-with-reward" className="p-2 rounded-md hover:bg-gray-100 text-black" aria-label="Cart" title="Cart">
             Pay
-          </Link>
-          <button className="p-2 rounded-md hover:bg-gray-100" aria-label="Account" title="Account">
+          </Link> */}
+          <Link to="/dashboard" className="p-2 rounded-md hover:bg-gray-100" aria-label="Cart" title="Cart">
             <User className="text-gray-900" size={22} />
-          </button>
-          <button className="p-2 rounded-md hover:bg-gray-100" aria-label="Wishlist" title="Wishlist">
+          </Link>
+          
+          {/* <button className="p-2 rounded-md hover:bg-gray-100" aria-label="Wishlist" title="Wishlist">
             <Heart className="text-gray-900" size={22} />
-          </button>
+          </button> */}
           <Link to="/addtocart" className="p-2 rounded-md hover:bg-gray-100" aria-label="Cart" title="Cart">
             <ShoppingBag className="text-gray-900" size={22} />
           </Link>
