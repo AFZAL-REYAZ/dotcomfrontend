@@ -88,8 +88,8 @@ const Header = () => {
 
       {/* ✅ Sidebar Menu (Left to Right) */}
       <div
-        className={`fixed mt-14 top-0 left-0 h-full bg-white shadow-xl border-r sidebar-menu z-40 transition-all duration-300 ease-in-out ${
-          menuOpen ? "translate-x-0 w-[30%]" : "-translate-x-full w-[30%]"
+        className={`fixed mt-14 top-0 left-0 h-auto bg-white shadow-xl border-r sidebar-menu z-40 transition-all duration-300 ease-in-out ${
+          menuOpen ? "translate-x-0 w-[40%]" : "-translate-x-full w-[30%]"
         }`}
       >
         <div className="p-5 flex flex-col gap-4">
@@ -101,11 +101,18 @@ const Header = () => {
             Home
           </Link>
           <Link
+            to="/dashboard"
+            onClick={() => setMenuOpen(false)}
+            className="block px-3 py-2 text-gray-900 rounded hover:bg-gray-100 font-medium"
+          >
+            DashBoard
+          </Link>
+          <Link
             to="/signup"
             onClick={() => setMenuOpen(false)}
             className="block px-3 py-2 text-gray-900 rounded hover:bg-gray-100 font-medium"
           >
-            Signup
+            Sign Up
           </Link>
           <Link
             to="/login"
@@ -113,6 +120,13 @@ const Header = () => {
             className="block px-3 py-2 text-gray-900 rounded hover:bg-gray-100 font-medium"
           >
             Login
+          </Link>
+          <Link
+            to="/"
+            onClick={() => setMenuOpen(false)}
+            className="block px-3 py-2 text-gray-900 rounded hover:bg-gray-100 font-medium"
+          >
+            Seting
           </Link>
         </div>
       </div>
