@@ -17,6 +17,8 @@ import Dashboard from './pages/Dashboard';
 import PayWithReward from './pages/PayWithReward';
 import LocationDashboard from './pages/LocationDashboard';
 import RewardDetail from './pages/RewardDetail';
+import Signup from './pages/SignUp';
+import Login from './pages/Login';
 
 
 
@@ -36,6 +38,8 @@ const App = () => {
         <Route path="/pay-with-reward" element={<PayWithReward />} />
         <Route path="/location-dashboard" element={<LocationDashboard />} />
         <Route path="/reward-dashboard" element={<RewardDetail />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
         {/* 
         <Route  path="/contactus" element={<ContactUs />}/>
         <Route  path="/about" element={<About />}/>
