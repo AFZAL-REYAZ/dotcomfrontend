@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -12,10 +13,22 @@ const Signup = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     console.log("Signup data:", formData);
-    // Later: connect with backend API like axios.post('/api/users/register', formData)
+    try{
+        const res=axios.post("https://dotcombackend.onrender.com/api/useroutes/signup",formData);
+        if(res.status===200 || res.status===201){
+            alert("Signup Successfully");
+            setFormData({name:"", email:"",password:""});
+        }
+    }catch(err){
+        console.error("Signup error:", err);
+      alert(
+        err.response?.data?.message ||
+          "❌ Signup failed. Please try again later."
+      );
+    }
   };
 
   return (
