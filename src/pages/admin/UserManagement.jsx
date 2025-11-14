@@ -10,7 +10,7 @@ const UserManagement = () => {
   const userDetail=async()=>{
     try{
         const users=await axios.get("https://dotcombackend.onrender.com/api/useroutes/allUser");
-        setUsers(res.data.users || []);
+        setUser(users.data.users || []);
 
     }catch(err){
         console.log(err);
