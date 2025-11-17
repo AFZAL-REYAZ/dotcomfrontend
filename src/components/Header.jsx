@@ -5,7 +5,8 @@ import { Menu, X, Search, User, ShoppingBag } from "lucide-react";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-
+   // 👉 Add this line RIGHT HERE
+  const loggedInUser = JSON.parse(localStorage.getItem("user"));
   // Close menu on outside click
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -67,7 +68,7 @@ const Header = () => {
         {/* Right: Profile + Cart */}
         <div className="flex items-center gap-3 sm:gap-4">
           <Link
-            to="/dashboard"
+            to="/profile"
             className="p-2 rounded-md hover:bg-gray-100 transition"
             aria-label="Account"
             title="Account"
@@ -113,6 +114,7 @@ const Header = () => {
             🏠 <span>Home</span>
           </Link>
 
+          {loggedInUser?.role === "admin" && (
           <Link
             to="/dashboard"
             onClick={() => setMenuOpen(false)}
@@ -120,6 +122,8 @@ const Header = () => {
           >
             📊 <span>Dashboard</span>
           </Link>
+          )}
+
 
           <Link
             to="/signup"

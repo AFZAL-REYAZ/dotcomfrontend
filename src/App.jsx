@@ -21,6 +21,7 @@ import Signup from './pages/SignUp';
 import Login from './pages/Login';
 import UnderDevelopmentPopup from './components/UnderDevelopmentPopup';
 import UserManagement from './pages/admin/UserManagement';
+import UserProfile from './pages/UserProfile';
 
 
 
@@ -44,6 +45,7 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/user-management" element={<UserManagement />} />
+        <Route path="/profile" element={<UserProfile />} />
         {/* 
         <Route  path="/contactus" element={<ContactUs />}/>
         <Route  path="/about" element={<About />}/>

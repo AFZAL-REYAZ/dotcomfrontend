@@ -38,7 +38,7 @@ const Login = () => {
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
         // Redirect to dashboard (or home)
-        navigate("/dashboard");
+        navigate("/");
       } else {
         setError("Login failed. Please try again.");
       }

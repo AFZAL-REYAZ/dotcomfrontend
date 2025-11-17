@@ -32,7 +32,6 @@ const UserManagement = () => {
 
     if (res.status === 200) {
       alert("Role updated successfully!");
-
       // refresh the user list
       userDetail();
     }
