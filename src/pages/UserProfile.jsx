@@ -22,13 +22,16 @@ const UserProfile = () => {
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 p-[3px] animate-pulse"></div>
             
             <img
-              src={`https://ui-avatars.com/api/?name=${user?.name?.replace(
-                " ",
-                "+"
-              )}&background=0D8ABC&color=fff&size=150`}
+              src={
+                user?.avatar && user.avatar.trim() !== ""
+                  ? user.avatar // user uploaded image
+                  : `https://ui-avatars.com/api/?name=${(user?.name || "User")
+                      .replace(" ", "+")}&background=0D8ABC&color=fff&size=150`
+              }
               alt="Profile"
               className="relative w-32 h-32 rounded-full object-cover bg-white shadow-lg"
             />
+
           </div>
 
           {/* Name */}
