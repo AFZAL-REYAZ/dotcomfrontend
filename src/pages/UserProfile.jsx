@@ -92,7 +92,7 @@ const UserProfile = () => {
     Logout
   </button>
 
-</div>
+  </div>
 
       </div>
     </div>

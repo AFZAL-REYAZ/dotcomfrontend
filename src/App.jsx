@@ -22,6 +22,7 @@ import Login from './pages/Login';
 import UnderDevelopmentPopup from './components/UnderDevelopmentPopup';
 import UserManagement from './pages/admin/UserManagement';
 import UserProfile from './pages/UserProfile';
+import EditProfile from './pages/EditProfile';
 
 
 
@@ -34,10 +35,10 @@ const App = () => {
       <Header/>
       <UnderDevelopmentPopup/>
       <Routes>
-        <Route  path="/" element={<Home />}/>
-        <Route  path="/ProductDetail" element={<ProductDetail />}/>
-        <Route  path="/addtocart" element={<AddToCart />}/>
-        <Route  path="/location" element={<LocationPopup />}/>
+        <Route path="/" element={<Home />}/>
+        <Route path="/ProductDetail" element={<ProductDetail />}/>
+        <Route path="/addtocart" element={<AddToCart />}/>
+        <Route path="/location" element={<LocationPopup />}/>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/pay-with-reward" element={<PayWithReward />} />
         <Route path="/location-dashboard" element={<LocationDashboard />} />
@@ -46,6 +47,8 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/user-management" element={<UserManagement />} />
         <Route path="/profile" element={<UserProfile />} />
+        <Route path="/edit-profile" element={<EditProfile/>} />
+
         {/* 
         <Route  path="/contactus" element={<ContactUs />}/>
         <Route  path="/about" element={<About />}/>
