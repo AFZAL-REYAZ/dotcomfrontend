@@ -106,14 +106,13 @@ const PayWithReward = () => {
               Enter Email
             </label>
             <input
-              type="text"
+              type="email" // CORRECTED
               name="email"
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter email"
               required
-              pattern="[6-9]{1}[0-9]{9}"
-              maxLength="10"
+              // Removed pattern and maxLength
               className="w-full border border-gray-300 text-gray-900 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
             />
           </div>
