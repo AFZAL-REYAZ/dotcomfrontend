@@ -26,20 +26,22 @@ const Login = () => {
 
       // Expecting { message, token, user } on success
       if (res.status === 200) {
-        alert("Login Successful!"); 
-        const { token, user } = res.data;
+  alert("Login Successful!");
+  const { token, user } = res.data;
 
-        // Save token (and optionally user) in localStorage
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
-        
+  // Clear old user
+  localStorage.removeItem("user");
 
-        // Optionally set axios default header for future requests
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  // Save new token & user
+  localStorage.setItem("token", token);
+  localStorage.setItem("user", JSON.stringify(user));
 
-        // Redirect to dashboard (or home)
-        navigate("/");
-      } else {
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+  navigate("/");
+  window.location.reload();   // ⭐ force update coins
+}
+ else {
         setError("Login failed. Please try again.");
       }
     } catch (err) {

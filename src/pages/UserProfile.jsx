@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 const UserProfile = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
-
+  console.log('====================================');
+  console.log(user);
+  console.log('====================================');
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
