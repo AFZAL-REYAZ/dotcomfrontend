@@ -86,14 +86,13 @@ const Signup = () => {
               Mobile Number
             </label>
             <input
-              type="tel"
+              type="text"
               name="mobile"
               required
-              maxLength={10}
               value={formData.mobile}
               onChange={handleChange}
-              className="mt-1 block w-full text-black rounded-md border border-gray-300 p-2.5 focus:ring-2 focus:ring-black outline-none"
-              placeholder="Enter 10-digit mobile number"
+              className="mt-1 block w-full p-2.5 border rounded-md"
+              placeholder="Enter 10-digit mobile"
             />
           </div>
 

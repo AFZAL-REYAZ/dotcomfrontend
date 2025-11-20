@@ -15,7 +15,7 @@ const EditProfile = () => {
 
   const [formData, setFormData] = useState({
     name: user?.name || "",
-    mobile: user?.mobile || "",     // 👈 MOBILE instead of email
+    mobile: user?.mobile || "",     
   });
 
   const [avatarFile, setAvatarFile] = useState(null);
@@ -53,7 +53,7 @@ const EditProfile = () => {
 
       const fd = new FormData();
       fd.append("name", formData.name);
-      fd.append("mobile", formData.mobile); // 👈 MOBILE not email
+      fd.append("mobile", formData.mobile); // 
 
       if (avatarFile) fd.append("avatar", avatarFile);
 
