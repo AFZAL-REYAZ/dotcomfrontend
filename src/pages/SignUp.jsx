@@ -1,3 +1,5 @@
+// src/pages/Signup.jsx
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -11,13 +13,20 @@ const Signup = () => {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Signup data:", formData);
+    setErrorMsg("");
+    setLoading(true);
 
     try {
       const res = await axios.post(
@@ -26,28 +35,37 @@ const Signup = () => {
       );
 
       if (res.status === 200 || res.status === 201) {
-        alert("Signup Successfully 🎉");
-        setFormData({ name: "", email: "", password: "" });
-
-        navigate("/login"); // Redirect to login page
+        alert("Signup Successful 🎉");
+        navigate("/login");
       }
     } catch (err) {
       console.error("Signup error:", err);
-      alert(
+      setErrorMsg(
         err.response?.data?.message ||
           "❌ Signup failed. Please try again later."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 space-y-6">
+        
         <h2 className="text-2xl font-bold text-center text-gray-800">
           Create Account
         </h2>
 
+        {errorMsg && (
+          <div className="text-sm text-red-600 bg-red-50 border border-red-200 p-2 rounded">
+            {errorMsg}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-5">
+          
+          {/* NAME */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Full Name
@@ -55,14 +73,15 @@ const Signup = () => {
             <input
               type="text"
               name="name"
+              required
               value={formData.name}
               onChange={handleChange}
-              required
-              className="mt-1 block w-full text-black rounded-md border border-gray-300 p-2.5 focus:ring-2 focus:ring-black focus:border-black outline-none"
+              className="mt-1 block w-full text-black rounded-md border border-gray-300 p-2.5 focus:ring-2 focus:ring-black outline-none"
               placeholder="Enter your full name"
             />
           </div>
 
+          {/* EMAIL */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Email
@@ -70,14 +89,15 @@ const Signup = () => {
             <input
               type="email"
               name="email"
+              required
               value={formData.email}
               onChange={handleChange}
-              required
-              className="mt-1 block w-full text-black rounded-md border border-gray-300 p-2.5 focus:ring-2 focus:ring-black focus:border-black outline-none"
+              className="mt-1 block w-full text-black rounded-md border border-gray-300 p-2.5 focus:ring-2 focus:ring-black outline-none"
               placeholder="Enter your email"
             />
           </div>
 
+          {/* PASSWORD */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Password
@@ -85,19 +105,25 @@ const Signup = () => {
             <input
               type="password"
               name="password"
+              required
               value={formData.password}
               onChange={handleChange}
-              required
-              className="mt-1 block w-full text-black rounded-md border border-gray-300 p-2.5 focus:ring-2 focus:ring-black focus:border-black outline-none"
+              className="mt-1 block w-full text-black rounded-md border border-gray-300 p-2.5 focus:ring-2 focus:ring-black outline-none"
               placeholder="Create a password"
             />
           </div>
 
+          {/* BUTTON */}
           <button
             type="submit"
-            className="w-full bg-black text-white py-2.5 rounded-md font-semibold hover:bg-gray-900 transition"
+            disabled={loading}
+            className={`w-full py-2.5 rounded-md font-semibold transition ${
+              loading
+                ? "bg-gray-400 text-white cursor-not-allowed"
+                : "bg-black text-white hover:bg-gray-900"
+            }`}
           >
-            Sign Up
+            {loading ? "Signing up..." : "Sign Up"}
           </button>
         </form>
 
@@ -113,3 +139,6 @@ const Signup = () => {
 };
 
 export default Signup;
+
+
+

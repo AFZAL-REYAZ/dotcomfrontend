@@ -2,11 +2,14 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, Search, User, ShoppingBag } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-   // 👉 Add this line RIGHT HERE
-  const loggedInUser = JSON.parse(localStorage.getItem("user"));
+   
+  // 👈 Get user from Redux (NOT localStorage)
+  // const user = JSON.parse(localStorage.getItem("user"));
+  const { user } = useSelector((state) => state.auth);
   // Close menu on outside click
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -114,7 +117,7 @@ const Header = () => {
             🏠 <span>Home</span>
           </Link>
 
-          {loggedInUser?.role === "admin" && (
+          {user?.role === "admin" && (
           <Link
             to="/dashboard"
             onClick={() => setMenuOpen(false)}

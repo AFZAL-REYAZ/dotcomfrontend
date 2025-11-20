@@ -1,21 +1,24 @@
+// src/pages/UserProfile.jsx
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logoutUser } from "../redux/slices/authSlice";
 
 const UserProfile = () => {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
-  console.log('====================================');
-  console.log(user);
-  console.log('====================================');
+  const dispatch = useDispatch();
+
+  // ⭐ GET LIVE USER FROM REDUX STORE
+  const { user } = useSelector((state) => state.auth);
+
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    window.location.href = "/login";
+    dispatch(logoutUser()); // ⭐ Clear Redux + localStorage
+    navigate("/login");
   };
 
   return (
     <div className="max-w-lg mx-auto mt-24 p-6">
-      {/* Outer Card */}
       <div className="relative bg-white shadow-2xl rounded-3xl p-8 border border-gray-100 
                       hover:shadow-[0_10px_40px_rgba(0,0,0,0.1)] transition-all duration-300">
 
@@ -49,8 +52,6 @@ const UserProfile = () => {
           <h2 className="mt-4 text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 tracking-wide whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
             {user?.name}
           </h2>
-
-
 
           {/* Role Badge */}
           <span
