@@ -79,8 +79,8 @@ const UserProfile = () => {
         {/* Details */}
         <div className="space-y-4 text-center">
           <p className="text-gray-700 text-lg">
-            <strong className="text-gray-900">Email/Mobile:</strong>{" "}
-            {user ? user.email : "Login to view"}
+            <strong className="text-gray-900">Mobile:</strong>{" "}
+            {user ? user.mobile : "Login to view"}
           </p>
         </div>
 
