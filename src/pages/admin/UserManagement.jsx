@@ -61,7 +61,7 @@ const UserManagement = () => {
           <thead>
             <tr className="bg-gray-100 text-gray-700">
               <th className="px-6 py-3">Name</th>
-              <th className="px-6 py-3">Email</th>
+              <th className="px-6 py-3">Mobile no</th>
               <th className="px-6 py-3">Role</th>
               <th className="px-6 py-3 text-center">Actions</th>
             </tr>
@@ -72,7 +72,7 @@ const UserManagement = () => {
               users.map((u) => (
                 <tr key={u._id} className="border-b hover:bg-gray-50 transition">
                   <td className="px-6 py-4 text-black">{u.name}</td>
-                  <td className="px-6 py-4 text-black">{u.email}</td>
+                  <td className="px-6 py-4 text-black">{u.mobile}</td>
 
                   <td className="px-6 py-4 text-black">
                     <select
