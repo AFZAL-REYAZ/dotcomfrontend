@@ -221,7 +221,7 @@ const RewardDetail = () => {
                       className={idx % 2 === 0 ? "bg-white" : "bg-slate-50/50"}
                     >
                       <td className="px-4 py-3 text-slate-900">{item.name}</td>
-                      <td className="px-4 py-3 text-slate-800">{item.mobil}</td>
+                      <td className="px-4 py-3 text-slate-800">{item.mobile}</td>
                       <td className="px-4 py-3 text-slate-900 font-medium">{currency.format(Number(item.amount || 0))}</td>
                       <td className="px-4 py-3">
                         <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 px-2 py-1 rounded-md text-sm font-medium ring-1 ring-emerald-200">
