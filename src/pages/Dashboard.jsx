@@ -10,9 +10,9 @@ const Dashboard = () => {
 
       {/* Main content */}
       <div className="z-10 w-full max-w-4xl text-center">
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
+        <h2 className="text-4xl sm:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
           📊 Admin Control Center
-        </h1>
+        </h2>
         <p className="text-slate-600 text-lg mb-10 max-w-2xl mx-auto">
           Manage user activity dashboards effortlessly — monitor location data and reward statistics in real-time.
         </p>
@@ -109,6 +109,36 @@ const Dashboard = () => {
               </div>
               <h2 className="text-2xl font-semibold text-slate-800 group-hover:text-amber-600">
                 User Reward Dashboard
+              </h2>
+              <p className="text-slate-500 text-sm">
+                Manage reward records, balances, and performance reports easily.
+              </p>
+            </div>
+          </Link>
+
+          <Link
+            to="/addproduct"
+            className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 border border-transparent hover:border-amber-500"
+          >
+            <div className="flex flex-col items-center justify-center space-y-3">
+              <div className="p-4 bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-full shadow-md">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-8 h-8"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 8.25v7.5m3.75-3.75h-7.5M12 3.75a8.25 8.25 0 100 16.5 8.25 8.25 0 000-16.5z"
+                  />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-semibold text-slate-800 group-hover:text-amber-600">
+                Add Product
               </h2>
               <p className="text-slate-500 text-sm">
                 Manage reward records, balances, and performance reports easily.

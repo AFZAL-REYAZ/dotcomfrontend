@@ -35,9 +35,9 @@ const LocationDashboard = () => {
     <div className="min-h-screen bg-gradient-to-br pt-20 from-blue-50 via-sky-100 to-amber-50 px-4 py-12 sm:px-6 lg:px-8 font-[Poppins]">
       {/* Header */}
       <div className="text-center mb-10">
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900">
-          📍 User Location Dashboard
-        </h1>
+        <h2 className="text-4xl sm:text-5xl font-extrabold text-slate-900">
+          User Location Dashboard
+        </h2>
         <p className="text-slate-600 mt-2 text-base">
           Track and analyze real-time user-submitted locations 🌍
         </p>

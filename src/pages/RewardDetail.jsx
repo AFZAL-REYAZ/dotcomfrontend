@@ -112,9 +112,9 @@ const RewardDetail = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
               Reward Payment Details
-            </h1>
+            </h2>
             <p className="text-slate-600 mt-1">View transactions, filter, sort, and export data.</p>
           </div>
 

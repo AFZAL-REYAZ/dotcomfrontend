@@ -51,22 +51,33 @@ const Header = () => {
             )}
           </button>
 
-          <button
-            className="p-2 rounded-md hover:bg-gray-100 transition"
-            aria-label="Search"
-            title="Search"
-          >
-            <Search className="text-gray-900" size={22} />
-          </button>
+          
         </div>
 
         {/* Center: Brand */}
-        <Link
+        {/* <Link
           to="/"
           className="absolute left-1/2 -translate-x-1/2 text-black font-extrabold text-xl sm:text-2xl tracking-wide uppercase select-none"
         >
           DOTCOM
-        </Link>
+        </Link> */}
+        {/* Search bar */}
+      <div className="flex flex-row sm:flex-row gap-3">
+        <div className="relative flex-1">
+          <button
+            aria-label="scan"
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full "
+          >
+            <Search className="text-gray-900" size={15} />
+          </button>
+          <input
+            type="text"
+            placeholder="What are you looking for?"
+            className="w-full border text-black border-gray-200 rounded-full py-1 pl-10 pr-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+          />
+          
+        </div>
+      </div>
 
         {/* Right: Profile + Cart */}
         <div className="flex items-center gap-3 sm:gap-4">

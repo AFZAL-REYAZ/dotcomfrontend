@@ -116,7 +116,7 @@ const Footer = () => {
         <div className="mt-10 border-t border-amber-400/20 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             {/* Newsletter */}
-            <div className="w-full md:w-auto md:flex-1">
+            {/* <div className="w-full md:w-auto md:flex-1">
               <form className="flex items-center gap-2" onSubmit={(e) => e.preventDefault()}>
                 <input
                   type="email"
@@ -130,7 +130,7 @@ const Footer = () => {
                   Subscribe
                 </Link>
               </form>
-            </div>
+            </div> */}
 
             {/* Legal */}
             <div className="text-xs text-gray-500">

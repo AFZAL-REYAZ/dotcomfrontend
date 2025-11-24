@@ -22,9 +22,8 @@ import UserProfile from "./pages/UserProfile";
 import EditProfile from "./pages/EditProfile";
 
 import { useDispatch } from "react-redux";
-import axios from "axios";
-import { setUser } from "./redux/slices/authSlice";
 import { refreshUser } from "./redux/slices/authSlice"; // ⭐ refresh thunk
+import AddProduct from "./pages/admin/AddProduct";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -57,6 +56,7 @@ const App = () => {
         <Route path="/user-management" element={<UserManagement />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/addproduct" element={<AddProduct />} />
       </Routes>
 
       <Footer />
