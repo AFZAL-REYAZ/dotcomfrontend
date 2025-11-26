@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import Carousel from '../components/Carousel'
 import ProductCategories from '../components/ProductCategories'
 import MostLoved from '../components/MostLoved'
+import AllProduct from '../components/AllProduct'
 
 const featured = [
   {
@@ -46,7 +47,7 @@ const Home = () => {
           <Carousel />
         </div>
       </section>
-
+      <AllProduct/>
       <MostLoved/>
       {/* Featured Products */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
