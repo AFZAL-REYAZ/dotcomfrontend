@@ -105,7 +105,7 @@ export default function ProductDetail() {
         >
           <div className="border-b pb-4">
             <div className="flex justify-between items-start">
-              <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
+              <h2 className="text-2xl font-bold text-gray-900">{product.name}</h2>
               <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-md text-sm font-medium">
                 Premium
               </div>

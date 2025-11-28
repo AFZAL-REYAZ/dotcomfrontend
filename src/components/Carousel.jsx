@@ -35,33 +35,43 @@ export default function Carousel({ className = "" }) {
         style={{ transform: `translateX(-${current * 100}%)` }}
       >
         {images.map((img, idx) => (
-          <div
-            key={idx}
-            className="w-full h-full flex-shrink-0 relative bg-black flex items-center justify-center"
-          >
+          <div key={idx} className="relative w-full h-full flex-shrink-0 overflow-hidden">
+
+            {/* 🔥 Blurred Background */}
             <img
               src={img}
-              alt={`carousel-${idx}`}
-              className="w-full h-full object-contain"
+              className="absolute inset-0 w-full h-full object-cover blur-xl scale-110"
+              alt=""
             />
+
+            {/* ✅ Main Sharp Image */}
+            <div className="relative z-10 w-full h-full flex items-center justify-center">
+              <img
+                src={img}
+                alt={`carousel-${idx}`}
+                className="max-w-full max-h-full object-contain"
+              />
+            </div>
           </div>
         ))}
       </div>
 
+      {/* Controls */}
       <button
         onClick={prevSlide}
-        className="absolute top-1/2 left-4 -translate-y-1/2 bg-white/10 p-2 rounded-full shadow hover:bg-white transition"
+        className="absolute top-1/2 left-4 -translate-y-1/2 bg-white/20 backdrop-blur p-2 rounded-full hover:bg-white/40 transition"
       >
         <ChevronLeft size={20} />
       </button>
 
       <button
         onClick={nextSlide}
-        className="absolute top-1/2 right-4 -translate-y-1/2 bg-white/10 p-2 rounded-full shadow hover:bg-white transition"
+        className="absolute top-1/2 right-4 -translate-y-1/2 bg-white/20 backdrop-blur p-2 rounded-full hover:bg-white/40 transition"
       >
         <ChevronRight size={20} />
       </button>
 
+      {/* Dots */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
         {images.map((_, idx) => (
           <button
