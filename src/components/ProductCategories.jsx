@@ -29,7 +29,7 @@ export default function ProductCategories() {
   ];
 
   return (
-    <div className="max-w-5xl mx-auto p-4">
+    <div className=" mx-auto p-4">
       
 
       {/* Category cards – always in one row */}

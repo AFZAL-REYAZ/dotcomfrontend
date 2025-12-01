@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Minus, Plus, Star } from "lucide-react";
 import { motion } from "framer-motion";
 import { fetchSingleProductThunk } from "../redux/thunks/productThunk";
+import { addToCartRedux } from "../redux/slices/cartSlice";
+
 
 export default function ProductDetail() {
   const { id } = useParams();              // ✅ product id from URL
@@ -39,26 +41,20 @@ export default function ProductDetail() {
     return <p className="pt-32 text-center">Product not found</p>;
   }
 
-  const addToCart = () => {
-    const item = {
-      title: product.name,
-      price: product.price,
-      image: product.image[0],
-      size,
-      quantity,
-    };
 
-    const existing = JSON.parse(localStorage.getItem("cartItems") || "[]");
-    const idx = existing.findIndex(
-      (i) => i.title === item.title && i.size === item.size
-    );
-
-    if (idx >= 0) existing[idx].quantity += item.quantity;
-    else existing.push(item);
-
-    localStorage.setItem("cartItems", JSON.stringify(existing));
-    navigate("/addtocart");
+const addToCart = () => {
+  const cartItem = {
+    _id: product._id,
+    name: product.name,
+    price: product.price,
+    image: product.image[0],
+    quantity,
+    size: "M",
   };
+  dispatch(addToCartRedux(cartItem));
+  navigate("/addtocart");
+};
+
 
   return (
     <div className="max-w-6xl mx-auto p-6 mt-20 pt-16">
