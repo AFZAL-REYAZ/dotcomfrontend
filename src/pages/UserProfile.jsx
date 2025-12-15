@@ -111,7 +111,9 @@ const UserProfile = () => {
 
         <div className="mt-4 bg-gray-50 rounded-lg p-4">
           <p className="text-gray-500 text-sm">Available Reward Points</p>
-          <span className="text-xl">🪙</span> <span className="font-semibold text-gray-600 text-lg">{user.rewardCoins}</span>
+          <span className="text-xl">🪙</span> <span className="font-semibold text-gray-600 text-lg">
+  {user?.rewardCoins ?? 0}
+</span>
 
           <div className="flex justify-between text-blue-500 text-sm mt-3">
             <button>How to earn</button>
