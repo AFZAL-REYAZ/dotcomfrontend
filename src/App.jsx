@@ -35,6 +35,7 @@ import Privacy from "./pages/Privacy";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import CancellationRefund from "./pages/CancellationRefund";
 import ShippingDelivery from "./pages/policyPages/ShippingDelivery";
+import AllProduct from "./components/AllProduct";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -58,6 +59,9 @@ const App = () => {
         <Route path="/ProductDetail/:id" element={<ProductDetail />} />
         <Route path="/addtocart" element={<AddToCart />} />
         <Route path="/location" element={<LocationPopup />} />
+
+        <Route path="/products" element={<AllProduct />} />
+        <Route path="/products/:category" element={<AllProduct />} />
 
 
         <Route path="/dashboard" element={<Dashboard />} />

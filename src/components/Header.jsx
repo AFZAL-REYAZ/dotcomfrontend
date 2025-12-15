@@ -1,12 +1,14 @@
 // src/components/Header.jsx
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X, Search, User, ShoppingBag } from "lucide-react";
 import { useSelector } from "react-redux";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-   
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [searchText, setSearchText] = useState("");
   // 👈 Get user from Redux (NOT localStorage)
   // const user = JSON.parse(localStorage.getItem("user"));
   const { user } = useSelector((state) => state.auth);
@@ -51,7 +53,7 @@ const Header = () => {
             )}
           </button>
 
-          
+
         </div>
 
         {/* Center: Brand */}
@@ -62,22 +64,30 @@ const Header = () => {
           DOTCOM
         </Link> */}
         {/* Search bar */}
-      <div className="flex flex-row sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <button
-            aria-label="scan"
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full "
-          >
-            <Search className="text-gray-900" size={15} />
-          </button>
-          <input
-            type="text"
-            placeholder="What are you looking for?"
-            className="w-full border text-black border-gray-200 rounded-full py-1 pl-10 pr-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
-          />
-          
+        <div className="flex flex-row sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <button
+              aria-label="scan"
+              onClick={() => navigate(`/products?search=${searchText}`)}
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full "
+            >
+              <Search className="text-gray-900" size={15} />
+            </button>
+            <input
+              type="text"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  navigate(`/products?search=${searchText}`);
+                  setMenuOpen(false);
+                }
+              }}
+              placeholder="What are you looking for?"
+              className="w-full border text-black border-gray-200 rounded-full py-1 pl-10 pr-2 shadow-sm focus:outline-none"
+            />
+          </div>
         </div>
-      </div>
 
         {/* Right: Profile + Cart */}
         <div className="flex items-center gap-3 sm:gap-4">
@@ -129,13 +139,13 @@ const Header = () => {
           </Link>
 
           {user?.role === "admin" && (
-          <Link
-            to="/dashboard"
-            onClick={() => setMenuOpen(false)}
-            className="flex items-center gap-3 px-3 py-2.5 text-gray-800 rounded-lg hover:bg-gray-100 transition font-medium"
-          >
-            📊 <span>Dashboard</span>
-          </Link>
+            <Link
+              to="/dashboard"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center gap-3 px-3 py-2.5 text-gray-800 rounded-lg hover:bg-gray-100 transition font-medium"
+            >
+              📊 <span>Dashboard</span>
+            </Link>
           )}
 
 

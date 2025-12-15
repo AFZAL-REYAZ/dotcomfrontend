@@ -19,15 +19,18 @@ export const addProductThunk = createAsyncThunk(
 // ✅ GET ALL PRODUCTS
 export const fetchProductsThunk = createAsyncThunk(
   "product/getAll",
-  async (_, { rejectWithValue }) => {
+  async ({category = "", search = ""}, { rejectWithValue }) => {
     try {
-      const res = await axios.get(API);
+      const res = await axios.get(
+        `${API}?category=${category}&search=${search}`
+      );
       return res.data.products;
     } catch (err) {
       return rejectWithValue("Fetch products failed");
     }
   }
 );
+
 
 
 export const fetchSingleProductThunk = createAsyncThunk(

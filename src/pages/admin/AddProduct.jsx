@@ -85,10 +85,10 @@ export default function AddProduct() {
             required
           >
             <option value="">Select Category</option>
-            <option value="mobile">Mobile</option>
-            <option value="headphone">Headphone</option>
-            <option value="phone-cover">Phone Cover</option>
-            <option value="sound-box">Sound Box</option>
+            <option value="mobiles">Mobile</option>
+            <option value="head-phones">Headphone</option>
+            <option value="phone-covers">Phone Cover</option>
+            <option value="sound-boxes">Sound Box</option>
           </select>
 
           {/* Description */}
