@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import gadgets from "../assets/carousel/gadgets.jpg";
+import smartwatch from "../assets/carousel/smartwatch.jpg"
 
 const images = [
-  "https://scontent.fdel76-1.fna.fbcdn.net/v/t1.6435-9/165373254_3795723670519677_4242796066786397083_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=2285d6&_nc_ohc=UvkTRk6g1BIQ7kNvwFk7997&_nc_oc=AdlMRjhSLPjZejivHsxghN7X3-AGJdGVxxwwe2Lh3vN-L9J39KMlOXD-ZAxFcj5EVaQ&_nc_zt=23&_nc_ht=scontent.fdel76-1.fna&_nc_gid=j053OyAK7lBNdTPm44Kk-Q&oh=00_AfjWb-aI8lR24-47eOUAPTeG7KAKeIjuGjtUKAv54X11pg&oe=695120EB",
+  gadgets,
   "https://www.mobilityindia.com/wp-content/uploads/2019/05/special-story-apr.jpg",
-  "https://www.hoodmarket.com/cdn/shop/collections/phone_acess_coll.jpg?v=1662467434",
+  smartwatch,
 ];
 
 export default function Carousel({ className = "" }) {

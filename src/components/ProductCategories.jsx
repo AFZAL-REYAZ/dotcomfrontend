@@ -1,39 +1,52 @@
 import React from "react";
 import Carousel from "./Carousel";
 import { useNavigate } from "react-router-dom";
+import phones from "../assets/categories/phones.jpg"
+import buds from "../assets/categories/buds.jpg"
+import gadgets from "../assets/categories/gadgets.avif"
+import headphone from "../assets/categories/headphone.jpg"
+import soundbox from "../assets/categories/soundbox.jpg"
+import watch from "../assets/categories/watch.jpg"
+import covers from "../assets/categories/covers.avif"
 
 export default function ProductCategories() {
   const navigate=useNavigate();
   const categories = [
     {
       label: "Mobile",
-      img: "https://www.apple.com/newsroom/images/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/article/Apple-iPhone-17-Pro-color-lineup-250909_inline.jpg.large_2x.jpg",
+      img: phones,
       category:"mobiles",
     },
     {
+      label: "Smart-watches",
+      img: watch,
+      category:"watches",
+    },
+    {
+      label: "Ear-buds",
+      img: buds,
+      category:"buds",
+    },
+    {
       label: "Gadgets",
-      img: "https://img.freepik.com/premium-photo/collection-electronic-gadgets-accessories-including-headphones-cameras-game-controllers-laptop-other-tech-devices_1187703-129882.jpg?w=2000",
-      category:"phone-covers",
+      img: gadgets,
+      category:"gadgets",
     },
     {
       label: "Head-phone",
-      img: "https://cdn.thewirecutter.com/wp-content/media/2023/07/bluetoothheadphones-2048px-0876.jpg",
+      img: headphone,
       category:"head-phones",
     },
     {
       label: "Sound-Box",
-      img: "https://d1aeri3ty3izns.cloudfront.net/media/2/26413/1200/preview.jpg",
+      img: soundbox,
       category:"sound-boxes",
     },
+    
     {
-      label: "H-phone",
-      img: "https://cdn.thewirecutter.com/wp-content/media/2023/07/bluetoothheadphones-2048px-0876.jpg",
-      category:"",
-    },
-    {
-      label: "S-Box",
-      img: "https://d1aeri3ty3izns.cloudfront.net/media/2/26413/1200/preview.jpg",
-      category:"",
+      label: "phone-covers",
+      img: covers,
+      category:"covers",
     },
   ];
 
