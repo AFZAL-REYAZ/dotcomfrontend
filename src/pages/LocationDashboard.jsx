@@ -10,7 +10,7 @@ const LocationDashboard = () => {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const res = await axios.get("https://dotcombackend.onrender.com/api/location");
+        const res = await axios.get("https://dotcombackend-xu8o.onrender.com/api/location");
         setLocations(res.data || []);
       } catch (err) {
         console.error("Failed to fetch locations", err);

@@ -24,7 +24,7 @@ const RewardDetail = () => {
     const fetchRewards = async () => {
       try {
         const res = await axios.get(
-          "https://dotcombackend.onrender.com/api/paywithreward"
+          "https://dotcombackend-xu8o.onrender.com/api/paywithreward"
         );
         const data = res?.data?.data || [];
         setRecords(Array.isArray(data) ? data : []);

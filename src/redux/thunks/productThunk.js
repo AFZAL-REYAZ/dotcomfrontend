@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API = "https://dotcombackend.onrender.com/api/products";
+const API = "https://dotcombackend-xu8o.onrender.com/api/products";
 
 // ✅ ADD PRODUCT
 export const addProductThunk = createAsyncThunk(

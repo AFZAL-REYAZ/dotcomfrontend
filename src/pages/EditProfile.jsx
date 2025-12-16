@@ -58,7 +58,7 @@ const EditProfile = () => {
       if (avatarFile) fd.append("avatar", avatarFile);
 
       const res = await axios.put(
-        "https://dotcombackend.onrender.com/api/useroutes/update-profile",
+        "https://dotcombackend-xu8o.onrender.com/api/useroutes/update-profile",
         fd,
         {
           headers: {

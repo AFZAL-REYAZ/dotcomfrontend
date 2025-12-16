@@ -12,7 +12,7 @@ const UserManagement = () => {
   const fetchUsers = async () => {
     try {
       const res = await axios.get(
-        "https://dotcombackend.onrender.com/api/useroutes/allUser"
+        "https://dotcombackend-xu8o.onrender.com/api/useroutes/allUser"
       );
       setUsers(res.data.users || []);
     } catch (err) {
@@ -27,7 +27,7 @@ const UserManagement = () => {
   const handleRoleChange = async (userId, newRole) => {
     try {
       const res = await axios.put(
-        "https://dotcombackend.onrender.com/api/useroutes/update-role",
+        "https://dotcombackend-xu8o.onrender.com/api/useroutes/update-role",
         { userId, role: newRole }
       );
 

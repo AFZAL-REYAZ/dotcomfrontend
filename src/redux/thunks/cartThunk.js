@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API = "https://dotcombackend.onrender.com/api/cart";
+const API = "https://dotcombackend-xu8o.onrender.com/api/cart";
 
 const getToken = () => localStorage.getItem("token");
 

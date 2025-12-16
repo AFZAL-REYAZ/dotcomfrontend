@@ -30,7 +30,7 @@ const Signup = () => {
 
     try {
       const res = await axios.post(
-        "https://dotcombackend.onrender.com/api/useroutes/signup",
+        "https://dotcombackend-xu8o.onrender.com/api/useroutes/signup",
         formData
       );
 

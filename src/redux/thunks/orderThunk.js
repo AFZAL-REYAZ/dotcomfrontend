@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API = "https://dotcombackend.onrender.com/api/orders";
+const API = "https://dotcombackend-xu8o.onrender.com/api/orders";
 
 // Send token as Bearer <token> — REQUIRED by your backend
 const token = () => ({

@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API = "https://dotcombackend.onrender.com/api/useroutes";
+const API = "https://dotcombackend-xu8o.onrender.com/api/useroutes";
 
 const token = () => ({
   Authorization: `Bearer ${localStorage.getItem("token")}`

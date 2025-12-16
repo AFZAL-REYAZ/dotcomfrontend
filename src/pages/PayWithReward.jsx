@@ -41,7 +41,7 @@ const PayWithReward = () => {
 
     try {
       const res = await axios.post(
-        "https://dotcombackend.onrender.com/api/paywithreward",
+        "https://dotcombackend-xu8o.onrender.com/api/paywithreward",
         formData
       );
 
