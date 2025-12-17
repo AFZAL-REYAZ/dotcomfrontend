@@ -9,8 +9,11 @@ export default function AddProduct() {
 
   const [form, setForm] = useState({
     name: "",
+    mrp: "",
     price: "",
     category: "",
+    hsnCode: "",
+    gst: "",
     description: "",
   });
 
@@ -21,22 +24,27 @@ export default function AddProduct() {
     e.preventDefault();
 
     const fd = new FormData();
-    fd.append("name", form.name);
-    fd.append("price", form.price);
-    fd.append("category", form.category);
-    fd.append("description", form.description);
+    Object.entries(form).forEach(([key, value]) => {
+      fd.append(key, value);
+    });
 
-    // ✅ append multiple images
     image.forEach((img) => fd.append("image", img));
 
     dispatch(addProductThunk(fd));
   };
 
-  // ✅ Reset & Toast Handling
   useEffect(() => {
     if (success) {
       alert("✅ Product added successfully!");
-      setForm({ name: "", price: "", category: "", description: "" });
+      setForm({
+        name: "",
+        mrp: "",
+        price: "",
+        category: "",
+        hsnCode: "",
+        gst: "",
+        description: "",
+      });
       setImage([]);
       setPreview([]);
       dispatch(resetStatus());
@@ -50,64 +58,92 @@ export default function AddProduct() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex justify-center pt-24 px-4">
-      <div className="bg-white shadow-xl border border-gray-200 rounded-2xl p-8 w-full max-w-2xl">
+      <div className="bg-white shadow-xl border border-gray-300 rounded-2xl p-8 w-full max-w-2xl">
 
-        <h2 className="text-3xl font-bold text-gray-900 text-center mb-6">
+        <h2 className="text-3xl font-bold text-center text-gray-900 mb-6">
           Add New Product
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Name */}
+        <form onSubmit={handleSubmit} className="space-y-5 text-gray-600">
+
           <input
             type="text"
             placeholder="Product Name"
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
-            className="w-full p-3 border rounded bg-white text-black"
+            className="input text-gray-600"
             required
           />
 
-          {/* Price */}
-          <input
-            type="number"
-            placeholder="Price"
-            value={form.price}
-            onChange={(e) => setForm({ ...form, price: e.target.value })}
-            className="w-full p-3 border rounded bg-white text-black"
-            required
-          />
+          <div className="grid grid-cols-2 gap-4">
+            <input
+              type="number"
+              placeholder="MRP"
+              value={form.mrp}
+              onChange={(e) => setForm({ ...form, mrp: e.target.value })}
+              className="input text-gray-600"
+              required
+            />
 
-          {/* Category */}
+            <input
+              type="number"
+              placeholder="Sale Price"
+              value={form.price}
+              onChange={(e) => setForm({ ...form, price: e.target.value })}
+              className="input text-gray-600"
+              required
+            />
+          </div>
+
           <select
             value={form.category}
             onChange={(e) => setForm({ ...form, category: e.target.value })}
-            className="w-full p-3 border rounded bg-white text-black"
+            className="input text-gray-600"
             required
           >
-            <option value="">Select Category</option>
-            <option value="mobiles">Mobile</option>
-            <option value="head-phones">Headphone</option>
-            <option value="phone-covers">Phone Cover</option>
-            <option value="sound-boxes">Sound Box</option>
+            <option value="" className="text-gray-600">Select Category</option>
+            <option value="mobiles" className="text-gray-600">Mobile</option>
+            <option value="head-phones" className="text-gray-600">Headphone</option>
+            <option value="phone-covers" className="text-gray-600">Phone Cover</option>
+            <option value="sound-boxes" className="text-gray-600">Sound Box</option>
           </select>
 
-          {/* Description */}
+          <div className="grid grid-cols-2 gap-4 text-gray-600">
+            <input
+              type="text"
+              placeholder="HSN Code"
+              value={form.hsnCode}
+              onChange={(e) => setForm({ ...form, hsnCode: e.target.value })}
+              className="input text-gray-600"
+              required
+            />
+
+            <input
+              type="number"
+              placeholder="GST (%)"
+              value={form.gst}
+              onChange={(e) => setForm({ ...form, gst: e.target.value })}
+              className="input text-gray-600"
+              required
+            />
+          </div>
+
           <textarea
             placeholder="Description"
             value={form.description}
             onChange={(e) =>
               setForm({ ...form, description: e.target.value })
             }
-            className="w-full p-3 border rounded h-28 bg-white text-black"
+            className="input text-gray-600"
+            style={{ height: "110px" }}
             required
           />
 
-          {/* Images */}
           <input
             type="file"
             multiple
             accept="image/*"
-            className="w-full p-3 border rounded bg-white text-black"
+            className="input text-gray-600"
             onChange={(e) => {
               const files = Array.from(e.target.files);
               setImage(files);
@@ -115,22 +151,28 @@ export default function AddProduct() {
             }}
             required
           />
-          {/* Preview */}
-          <div className="flex gap-3 flex-wrap">
+
+          <div className="flex gap-3 flex-wrap text-gray-600">
             {preview.map((img, i) => (
-              <img key={i} src={img} className="w-20 h-20 object-cover rounded" />
+              <img
+                key={i}
+                src={img}
+                alt="preview"
+                className="w-20 h-20 object-cover text-gray-600 rounded border"
+              />
             ))}
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-3 rounded text-white ${loading ? "bg-gray-400" : "bg-black"
-              }`}
+            className={`w-full py-3 rounded-lg text-white font-semibold ${
+              loading ? "bg-gray-400" : "bg-black hover:bg-gray-900"
+            }`}
           >
             {loading ? "Uploading..." : "Add Product"}
           </button>
+
         </form>
       </div>
     </div>

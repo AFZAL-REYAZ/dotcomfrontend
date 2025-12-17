@@ -69,6 +69,9 @@ export default function AllProduct() {
                   {p.name}
                 </h5>
                 <span className="text-indigo-600 font-bold">
+                  ₹{p.mrp}
+                </span>
+                <span className="text-indigo-600 font-bold">
                   ₹{p.price}
                 </span>
               </div>
