@@ -24,9 +24,8 @@ export default function AllProduct() {
 
   return (
     <section
-      className={`max-w-7xl mx-auto px-6 md:px-10 pb-20 ${
-        hasFilter ? "pt-20" : "pt-0"
-      }`}
+      className={`max-w-7xl mx-auto px-6 md:px-10 pb-20 ${hasFilter ? "pt-20" : "pt-0"
+        }`}
     >
       {/* HEADER */}
       {hasFilter && (
@@ -56,7 +55,15 @@ export default function AllProduct() {
               className="group bg-white rounded-2xl border shadow hover:shadow-lg transition cursor-pointer"
               onClick={() => navigate(`/ProductDetail/${p._id}`)}
             >
-              <div className="aspect-square bg-gray-50 rounded-t-2xl overflow-hidden">
+              <div className="aspect-square bg-gray-50 rounded-t-2xl overflow-hidden relative">
+
+                {/* DISCOUNT BADGE */}
+                {p.mrp > p.price && (
+                  <span className="absolute top-2 right-2 bg-green-600 text-white text-[10px] font-semibold px-2 py-[2px] rounded-md">
+                    {Math.round(((p.mrp - p.price) / p.mrp) * 100)}% OFF
+                  </span>
+                )}
+
                 <img
                   src={p.image?.[0]}
                   alt={p.name}
@@ -64,17 +71,25 @@ export default function AllProduct() {
                 />
               </div>
 
+
               <div className="p-4">
-                <h5 className="text-gray-700 font-semibold text-sm">
+                <h5 className="text-gray-700 font-medium text-xs leading-tight">
                   {p.name}
                 </h5>
-                <span className="text-indigo-600 font-bold">
-                  ₹{p.mrp}
-                </span>
-                <span className="text-indigo-600 font-bold">
-                  ₹{p.price}
-                </span>
+
+                <div className="flex items-center gap-2 mt-1">
+                  {/* MRP */}
+                  <span className="text-gray-400 text-[10px] line-through">
+                    ₹{p.mrp}
+                  </span>
+
+                  {/* Price */}
+                  <span className="text-indigo-600 font-semibold text-xs">
+                    ₹{p.price}
+                  </span>
+                </div>
               </div>
+
             </div>
           ))}
         </div>
