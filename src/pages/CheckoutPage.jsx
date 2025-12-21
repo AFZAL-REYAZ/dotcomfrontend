@@ -4,6 +4,12 @@ import { fetchCartThunk } from "../redux/thunks/cartThunk";
 import { deleteAddress, fetchAddresses } from "../redux/thunks/addressThunk";
 import { useNavigate } from "react-router-dom";
 import { placeOrderThunk } from "../redux/thunks/orderThunk";
+import {
+  createPaymentOrderThunk,
+  verifyPaymentThunk,
+} from "../redux/thunks/paymentThunk";
+
+
 
 export default function CheckoutPage() {
   const dispatch = useDispatch();
@@ -14,7 +20,7 @@ export default function CheckoutPage() {
 
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("COD");
-
+  const { loading } = useSelector((state) => state.payment);
   useEffect(() => {
     dispatch(fetchCartThunk());
     dispatch(fetchAddresses());
@@ -39,25 +45,61 @@ export default function CheckoutPage() {
 
   const finalAmount = total + promiseFee + deleveryCharges;
 
-  const placeOrder = () => {
-    if (!selectedAddress) {
-      alert("Please select a delivery address");
-      return;
-    }
 
+const placeOrder = async () => {
+  if (!selectedAddress) {
+    alert("Please select a delivery address");
+    return;
+  }
+
+  // 🔴 COD FLOW
+  if (paymentMethod === "COD") {
     dispatch(
       placeOrderThunk({
         addressId: selectedAddress,
-        paymentMethod,
+        paymentMethod: "COD",
       })
     ).then((res) => {
-      if (!res.error) {
-        navigate("/order-success");
-      } else {
-        alert("Order failed. Try again.");
-      }
+      if (!res.error) navigate("/order-success");
     });
+    return;
+  }
+
+  // 🟢 ONLINE PAYMENT (REDUX)
+  const res = await dispatch(
+    createPaymentOrderThunk({ amount: finalAmount })
+  );
+
+  if (!res.payload) return;
+
+  const options = {
+    key: import.meta.env.VITE_RAZORPAY_KEY,
+    amount: res.payload.amount,
+    currency: "INR",
+    name: "Dotcom Gadgets",
+    description: "Order Payment",
+    order_id: res.payload.id,
+
+    handler: async (response) => {
+      await dispatch(
+        verifyPaymentThunk({
+          razorpayOrderId: response.razorpay_order_id,
+          razorpayPaymentId: response.razorpay_payment_id,
+          razorpaySignature: response.razorpay_signature,
+          addressId: selectedAddress,
+          totalAmount: finalAmount,
+        })
+      );
+
+      navigate("/order-success");
+    },
+
+    theme: { color: "#000000" },
   };
+
+  new window.Razorpay(options).open();
+};
+
 
   return (
     <div className="max-w-4xl mx-auto pt-20 p-6 bg-white min-h-screen text-black">
@@ -179,15 +221,6 @@ export default function CheckoutPage() {
               <span className="text-green-600 font-semibold">₹ {deleveryCharges}</span>
             </div>
 
-            {/* <div className="flex justify-between">
-              <span>Buy more & save more</span>
-              <span className="text-green-600">-₹2</span>
-            </div> */}
-
-            {/* <div className="flex justify-between">
-              <span>Coupons for you</span>
-              <span className="text-green-600">-₹129</span>
-            </div> */}
 
             <div className="flex justify-between">
               <span>Protect Promise Fee</span>
@@ -247,3 +280,7 @@ export default function CheckoutPage() {
     </div>
   );
 }
+
+
+
+
