@@ -22,155 +22,135 @@ export default function AddAddressForm() {
 
   const submitAddress = () => {
     dispatch(addAddress(form)).then((res) => {
-      if (!res.error) {
-        alert("Address successfully added!");
-      }
+      if (!res.error) alert("✅ Address added successfully");
     });
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-10 px-5 pt-10">
+    <div className="min-h-screen bg-gray-50 flex items-start justify-center py-10 px-4">
+      <div className="w-full max-w-xl bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
 
-      {/* Heading */}
-      {/* <h1 className="text-center text-3xl font-semibold">Checkout</h1> */}
-      <p className="text-center text-gray-600 mt-1">Shipping address</p>
+        {/* Header */}
+        <div className="mb-8 text-center">
+          <h1 className="text-2xl font-bold text-gray-900">
+            Add Delivery Address
+          </h1>
+          <p className="text-gray-500 mt-1 text-sm">
+            This address will be used for order delivery
+          </p>
+        </div>
 
-      {/* Form Card */}
-      <div className="mt-8 bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+        {/* Form */}
+        <div className="space-y-6">
 
-        {/* Row 1: Full Name + Phone */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
-
-          {/* Full Name */}
-          <div className="relative">
-            <input
+          {/* Name + Phone */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <FloatingInput
+              label="Full Name"
               name="fullName"
+              value={form.fullName}
               onChange={handleChange}
-              className="peer w-full border-b-2 border-gray-300 py-2 outline-none text-gray-900 focus:border-black"
-              required
             />
-            <label
-              className="absolute left-0 top-2 text-gray-500 transition-all
-              peer-focus:-top-3 peer-focus:text-xs peer-focus:text-black
-              peer-valid:-top-3 peer-valid:text-xs"
-            >
-              Full Name *
-            </label>
-          </div>
-
-          {/* Phone */}
-          <div className="relative">
-            <input
+            <FloatingInput
+              label="Phone Number"
               name="phone"
+              value={form.phone}
               onChange={handleChange}
-              className="peer w-full border-b-2 border-gray-300 py-2 outline-none text-gray-900 focus:border-black"
-              required
+              inputMode="numeric"
             />
-            <label
-              className="absolute left-0 top-2 text-gray-500 transition-all
-              peer-focus:-top-3 peer-focus:text-xs peer-focus:text-black
-              peer-valid:-top-3 peer-valid:text-xs"
-            >
-              Phone Number *
-            </label>
           </div>
-        </div>
 
-        {/* Pincode */}
-        <div className="relative mb-6">
-          <input
+          {/* Pincode */}
+          <FloatingInput
+            label="Pincode"
             name="pincode"
+            value={form.pincode}
             onChange={handleChange}
-            className="peer w-full border-b-2 border-gray-300 py-2 outline-none text-gray-900 focus:border-black"
-            required
+            inputMode="numeric"
           />
-          <label
-            className="absolute left-0 top-2 text-gray-500 transition-all
-            peer-focus:-top-3 peer-focus:text-xs peer-focus:text-black
-            peer-valid:-top-3 peer-valid:text-xs"
-          >
-            Pincode *
-          </label>
-        </div>
 
-        {/* Address Line */}
-        <div className="relative mb-6">
-          <input
+          {/* Address */}
+          <FloatingInput
+            label="House / Flat / Building"
             name="houseNo"
+            value={form.houseNo}
             onChange={handleChange}
-            className="peer w-full border-b-2 border-gray-300 py-2 outline-none text-gray-900 focus:border-black"
-            required
           />
-          <label
-            className="absolute left-0 top-2 text-gray-500 transition-all
-            peer-focus:-top-3 peer-focus:text-xs peer-focus:text-black
-            peer-valid:-top-3 peer-valid:text-xs"
-          >
-            Address Line *
-          </label>
-        </div>
 
-        {/* Row 2: City + State */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          {/* City */}
-          <div className="relative">
-            <input
+          <FloatingInput
+            label="Area / Locality"
+            name="area"
+            value={form.area}
+            onChange={handleChange}
+          />
+
+          {/* City + State */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <FloatingInput
+              label="City"
               name="city"
+              value={form.city}
               onChange={handleChange}
-              className="peer w-full border-b-2 border-gray-300 py-2 outline-none text-gray-900 focus:border-black"
-              required
             />
-            <label
-              className="absolute left-0 top-2 text-gray-500 transition-all
-              peer-focus:-top-3 peer-focus:text-xs peer-focus:text-black
-              peer-valid:-top-3 peer-valid:text-xs"
-            >
-              City *
-            </label>
-          </div>
-
-          {/* State */}
-          <div className="relative">
-            <input
+            <FloatingInput
+              label="State"
               name="state"
+              value={form.state}
               onChange={handleChange}
-              className="peer w-full border-b-2 border-gray-300 py-2 outline-none text-gray-900 focus:border-black"
-              required
             />
-            <label
-              className="absolute left-0 top-2 text-gray-500 transition-all
-              peer-focus:-top-3 peer-focus:text-xs peer-focus:text-black
-              peer-valid:-top-3 peer-valid:text-xs"
-            >
-              State *
-            </label>
           </div>
-        </div>
 
-        {/* Landmark */}
-        <div className="relative mb-6">
-          <input
+          {/* Landmark */}
+          <FloatingInput
+            label="Landmark (Optional)"
             name="landmark"
+            value={form.landmark}
             onChange={handleChange}
-            className="peer w-full border-b-2 border-gray-300 py-2 outline-none text-gray-900 focus:border-black"
           />
-          <label
-            className="absolute left-0 top-2 text-gray-500 transition-all
-            peer-focus:-top-3 peer-focus:text-xs peer-focus:text-black
-            peer-valid:-top-3 peer-valid:text-xs"
-          >
-            Landmark (Optional)
-          </label>
-        </div>
 
-        {/* Submit Button */}
-        <button
-          onClick={submitAddress}
-          className="w-full bg-black text-white py-3 rounded-lg text-lg font-semibold hover:bg-gray-800 transition"
-        >
-          Save Address
-        </button>
+          {/* Button */}
+          <button
+            onClick={submitAddress}
+            className="w-full mt-6 bg-black text-white py-3 rounded-xl text-lg font-semibold
+            hover:bg-gray-900 transition-all duration-200 shadow-lg"
+          >
+            Save Address
+          </button>
+        </div>
       </div>
+    </div>
+  );
+}
+
+/* ===================================
+   🔹 Professional Floating Input
+=================================== */
+function FloatingInput({
+  label,
+  name,
+  value,
+  onChange,
+  inputMode = "text",
+}) {
+  return (
+    <div className="relative">
+      <input
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder=" "
+        inputMode={inputMode}
+        className="peer w-full px-4 py-3 rounded-xl border border-gray-300
+        outline-none text-gray-900 bg-white
+        focus:border-black focus:ring-1 focus:ring-black transition"
+      />
+      <label
+        className="absolute left-4 top-3 text-gray-500 bg-white px-1 transition-all
+        peer-focus:-top-2 peer-focus:text-xs peer-focus:text-black
+        peer-placeholder-shown:top-3 peer-placeholder-shown:text-base"
+      >
+        {label}
+      </label>
     </div>
   );
 }
