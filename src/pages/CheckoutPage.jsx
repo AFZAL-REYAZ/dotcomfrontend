@@ -21,20 +21,45 @@ export default function CheckoutPage() {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const { loading } = useSelector((state) => state.payment);
+  const [paymentOpening, setPaymentOpening] = useState(false);
+
+  const total = items.reduce(
+    (acc, item) => acc + item.product.price * item.quantity,
+    0
+  );
+
+  const discount = Math.floor(total * 0.45);
+  //   const saveMore = 238;
+  const deleveryCharges = 1;
+  const promiseFee = 1;
+
+  const finalAmount = total + promiseFee + deleveryCharges;
+
+
+
   useEffect(() => {
     dispatch(fetchCartThunk());
     dispatch(fetchAddresses());
   }, []);
+
   useEffect(() => {
-  if (paymentMethod === "Online") {
-    dispatch(createPaymentOrderThunk({ amount: finalAmount }))
-      .then((res) => {
-        if (res.payload) {
-          setRazorpayOrder(res.payload);
-        }
-      });
-  }
-}, [paymentMethod]);
+    if (paymentMethod === "Online" && finalAmount > 0) {
+      dispatch(createPaymentOrderThunk({ amount: finalAmount }))
+        .then((res) => {
+          if (res.payload) {
+            setRazorpayOrder(res.payload);
+          }
+        });
+    }
+  }, [paymentMethod, finalAmount, dispatch]);
+
+  useEffect(() => {
+    if (paymentMethod === "COD") {
+      setRazorpayOrder(null);
+    }
+  }, [paymentMethod]);
+
+
 
 
   useEffect(() => {
@@ -44,72 +69,68 @@ export default function CheckoutPage() {
     }
   }, [addresses]);
 
-  const total = items.reduce(
-    (acc, item) => acc + item.product.price * item.quantity,
-    0
-  );
-
-  const discount = Math.floor(total * 0.45);
-//   const saveMore = 238;
-  const deleveryCharges = 1;
-  const promiseFee = 1;
-
-  const finalAmount = total + promiseFee + deleveryCharges;
 
 
-const placeOrder = () => {
-  if (!selectedAddress) {
-    alert("Please select a delivery address");
-    return;
-  }
 
-  // 🔴 CASH ON DELIVERY
-  if (paymentMethod === "COD") {
-    dispatch(
-      placeOrderThunk({
-        addressId: selectedAddress,
-        paymentMethod: "COD",
-      })
-    ).then((res) => {
-      if (!res.error) navigate("/order-success");
-    });
-    return;
-  }
+  const placeOrder = () => {
+    if (!selectedAddress) {
+      alert("Please select a delivery address");
+      return;
+    }
 
-  // 🟢 ONLINE PAYMENT (MOBILE SAFE)
-  if (!razorpayOrder) {
-    alert("Payment is preparing, please wait...");
-    return;
-  }
-
-  const options = {
-    key: import.meta.env.VITE_RAZORPAY_KEY,
-    amount: razorpayOrder.amount,
-    currency: "INR",
-    name: "Dotcom Gadgets",
-    description: "Order Payment",
-    order_id: razorpayOrder.id,
-
-    handler: async (response) => {
-      await dispatch(
-        verifyPaymentThunk({
-          razorpayOrderId: response.razorpay_order_id,
-          razorpayPaymentId: response.razorpay_payment_id,
-          razorpaySignature: response.razorpay_signature,
+    // 🔴 CASH ON DELIVERY
+    if (paymentMethod === "COD") {
+      dispatch(
+        placeOrderThunk({
           addressId: selectedAddress,
-          totalAmount: finalAmount,
+          paymentMethod: "COD",
         })
-      );
+      ).then((res) => {
+        if (!res.error) navigate("/order-success");
+      });
+      return;
+    }
 
-      navigate("/order-success");
-    },
+    // 🟢 ONLINE PAYMENT (MOBILE SAFE)
+    if (!razorpayOrder) {
+      alert("Payment is preparing, please wait...");
+      return;
+    }
 
-    theme: { color: "#000000" },
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY,
+      amount: razorpayOrder.amount,
+      currency: "INR",
+      name: "Dotcom Gadgets",
+      description: "Order Payment",
+      order_id: razorpayOrder.id,
+
+      handler: async (response) => {
+        await dispatch(
+          verifyPaymentThunk({
+            razorpayOrderId: response.razorpay_order_id,
+            razorpayPaymentId: response.razorpay_payment_id,
+            razorpaySignature: response.razorpay_signature,
+            addressId: selectedAddress,
+            totalAmount: finalAmount,
+          })
+        );
+        setPaymentOpening(false);
+        navigate("/order-success");
+      },
+
+      theme: { color: "#000000" },
+    };
+    if (paymentOpening) return;
+    setPaymentOpening(true);
+    const rzp = new window.Razorpay(options);
+    rzp.on("payment.failed", () => {
+      alert("Payment failed or cancelled");
+      setPaymentOpening(false);
+    });
+
+    rzp.open();
   };
-
-  const rzp = new window.Razorpay(options);
-  rzp.open();
-};
 
 
 
@@ -150,10 +171,9 @@ const placeOrder = () => {
               <label
                 key={address._id}
                 className={`border p-4 rounded-xl flex gap-4 cursor-pointer shadow-sm 
-                  transition ${
-                    selectedAddress === address._id
-                      ? "border-black bg-gray-100"
-                      : "border-gray-300"
+                  transition ${selectedAddress === address._id
+                    ? "border-black bg-gray-100"
+                    : "border-gray-300"
                   }`}
               >
                 <input
@@ -284,11 +304,18 @@ const placeOrder = () => {
       {/* PLACE ORDER BUTTON */}
       <button
         onClick={placeOrder}
-        disabled={paymentMethod === "Online" && !razorpayOrder}
-        className="w-full mt-10 py-4 bg-black text-white rounded-lg text-lg font-semibold"
+        disabled={
+          (paymentMethod === "Online" && !razorpayOrder) || paymentOpening
+        }
+        className="w-full mt-10 py-4 bg-black text-white rounded-lg text-lg font-semibold disabled:opacity-60"
       >
-        Place Order
+        {paymentOpening
+          ? "Opening Payment..."
+          : paymentMethod === "Online" && !razorpayOrder
+            ? "Preparing Payment..."
+            : "Place Order"}
       </button>
+
     </div>
   );
 }
