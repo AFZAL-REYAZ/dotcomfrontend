@@ -44,13 +44,15 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (paymentMethod === "Online" && finalAmount > 0) {
-      dispatch(createPaymentOrderThunk({ amount: finalAmount }))
-        .then((res) => {
-          if (res.payload) {
-            setRazorpayOrder(res.payload);
-          }
-        });
-    }
+    console.log("Creating payment order...");
+    dispatch(createPaymentOrderThunk({ amount: finalAmount }))
+      .then((res) => {
+        console.log("Payment order response:", res);
+        if (res.payload) {
+          setRazorpayOrder(res.payload);
+        }
+      });
+  }
   }, [paymentMethod, finalAmount, dispatch]);
 
   useEffect(() => {
@@ -97,6 +99,7 @@ export default function CheckoutPage() {
       return;
     }
 
+
     const options = {
       key: import.meta.env.VITE_RAZORPAY_KEY,
       amount: razorpayOrder.amount,
@@ -121,15 +124,28 @@ export default function CheckoutPage() {
 
       theme: { color: "#000000" },
     };
+
     if (paymentOpening) return;
     setPaymentOpening(true);
+
+    if (!window.Razorpay) {
+      alert("Payment service not loaded. Please refresh and try again.");
+      setPaymentOpening(false);
+      return;
+    }
+
     const rzp = new window.Razorpay(options);
+
     rzp.on("payment.failed", () => {
       alert("Payment failed or cancelled");
       setPaymentOpening(false);
     });
 
-    rzp.open();
+    // 🔥 force immediate execution in same click stack
+setTimeout(() => {
+  rzp.open();
+}, 0);
+
   };
 
 
