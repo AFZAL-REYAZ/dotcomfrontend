@@ -6,7 +6,7 @@ import {
   Gift,
   ShoppingCart,
   PlusCircle,
-  Users
+  Users,
 } from "lucide-react";
 
 const Dashboard = () => {
@@ -27,119 +27,95 @@ const Dashboard = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
-          {/* Location Dashboard */}
-          <Link to="/location-dashboard" className="group dashboard-card hover:border-blue-500">
-            <DashboardIcon color="blue">
-              <MapPin size={28} />
-            </DashboardIcon>
-            <h3 className="dashboard-title">User Location Dashboard</h3>
-            <p className="dashboard-desc">
-              Track and monitor real-time user locations on the map.
-            </p>
-          </Link>
+          {/* Location */}
+          <DashboardCard
+            to="/location-dashboard"
+            title="User Location Dashboard"
+            desc="Track and monitor real-time user locations on the map."
+            icon={<MapPin size={28} />}
+            gradient="from-cyan-500 to-blue-600"
+            ring="ring-cyan-200"
+          />
 
-          {/* Pay with Reward */}
-          <Link to="/pay-with-reward" className="group dashboard-card hover:border-amber-500">
-            <DashboardIcon color="amber">
-              <Coins size={28} />
-            </DashboardIcon>
-            <h3 className="dashboard-title">Pay with Coins</h3>
-            <p className="dashboard-desc">
-              Accept payments using reward coins and manage transactions.
-            </p>
-          </Link>
+          {/* Pay with Coins */}
+          <DashboardCard
+            to="/pay-with-reward"
+            title="Pay with Coins"
+            desc="Accept payments using reward coins and manage transactions."
+            icon={<Coins size={28} />}
+            gradient="from-emerald-500 to-teal-600"
+            ring="ring-emerald-200"
+          />
 
-          {/* Reward Dashboard */}
-          <Link to="/reward-dashboard" className="group dashboard-card hover:border-amber-500">
-            <DashboardIcon color="amber">
-              <Gift size={28} />
-            </DashboardIcon>
-            <h3 className="dashboard-title">Reward Dashboard</h3>
-            <p className="dashboard-desc">
-              View, assign, and manage user reward balances.
-            </p>
-          </Link>
+          {/* Rewards */}
+          <DashboardCard
+            to="/reward-dashboard"
+            title="Reward Dashboard"
+            desc="View, assign, and manage user reward balances."
+            icon={<Gift size={28} />}
+            gradient="from-purple-500 to-pink-500"
+            ring="ring-purple-200"
+          />
 
-          {/* Order Dashboard */}
-          <Link to="/order-dashboard" className="group dashboard-card hover:border-amber-500">
-            <DashboardIcon color="amber">
-              <ShoppingCart size={28} />
-            </DashboardIcon>
-            <h3 className="dashboard-title">Order Dashboard</h3>
-            <p className="dashboard-desc">
-              Track orders, order status, and sales performance.
-            </p>
-          </Link>
+          {/* Orders */}
+          <DashboardCard
+            to="/order-dashboard"
+            title="Order Dashboard"
+            desc="Track orders, order status, and sales performance."
+            icon={<ShoppingCart size={28} />}
+            gradient="from-orange-500 to-red-500"
+            ring="ring-orange-200"
+          />
 
           {/* Add Product */}
-          <Link to="/addproduct" className="group dashboard-card hover:border-amber-500">
-            <DashboardIcon color="amber">
-              <PlusCircle size={28} />
-            </DashboardIcon>
-            <h3 className="dashboard-title">Add Product</h3>
-            <p className="dashboard-desc">
-              Add new products and manage your inventory.
-            </p>
-          </Link>
+          <DashboardCard
+            to="/addproduct"
+            title="Add Product"
+            desc="Add new products and manage your inventory."
+            icon={<PlusCircle size={28} />}
+            gradient="from-indigo-500 to-violet-600"
+            ring="ring-indigo-200"
+          />
 
           {/* User Management */}
-          <Link to="/user-management" className="group dashboard-card hover:border-amber-500">
-            <DashboardIcon color="amber">
-              <Users size={28} />
-            </DashboardIcon>
-            <h3 className="dashboard-title">User Management</h3>
-            <p className="dashboard-desc">
-              Manage user accounts, roles, and permissions.
-            </p>
-          </Link>
+          <DashboardCard
+            to="/user-management"
+            title="User Management"
+            desc="Manage user accounts, roles, and permissions."
+            icon={<Users size={28} />}
+            gradient="from-slate-600 to-gray-800"
+            ring="ring-slate-300"
+          />
 
         </div>
       </div>
-
-      {/* Reusable Styles */}
-      <style>
-        {`
-          .dashboard-card {
-            background: white;
-            border-radius: 1rem;
-            padding: 2rem;
-            text-align: center;
-            border: 1px solid transparent;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-          }
-          .dashboard-card:hover {
-            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
-          }
-          .dashboard-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1f2937;
-            margin-top: 1rem;
-          }
-          .dashboard-desc {
-            font-size: 0.875rem;
-            color: #6b7280;
-            margin-top: 0.5rem;
-          }
-        `}
-      </style>
     </div>
   );
 };
 
-const DashboardIcon = ({ children, color }) => {
-  const colors = {
-    blue: "from-blue-500 to-sky-500",
-    amber: "from-amber-400 to-orange-500",
-  };
-
+/* REUSABLE CARD */
+const DashboardCard = ({ to, title, desc, icon, gradient, ring }) => {
   return (
-    <div
-      className={`mx-auto w-fit p-4 rounded-full text-white shadow-md bg-gradient-to-br ${colors[color]}`}
+    <Link
+      to={to}
+      className="group bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 border border-transparent hover:border-slate-300"
     >
-      {children}
-    </div>
+      <div
+        className={`mx-auto w-fit p-4 rounded-full text-white bg-gradient-to-br ${gradient} 
+        ring-4 ${ring} shadow-md 
+        group-hover:scale-110 group-hover:rotate-3 transition`}
+      >
+        {icon}
+      </div>
+
+      <h3 className="text-xl font-semibold text-slate-800 mt-4 group-hover:text-black">
+        {title}
+      </h3>
+
+      <p className="text-sm text-slate-500 mt-2">
+        {desc}
+      </p>
+    </Link>
   );
 };
 

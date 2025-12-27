@@ -37,6 +37,7 @@ import CancellationRefund from "./pages/CancellationRefund";
 import ShippingDelivery from "./pages/policyPages/ShippingDelivery";
 import AllProduct from "./components/AllProduct";
 import OrderDashboard from "./pages/admin/OrderDashboard";
+import AdminOrderDashboard from "./pages/admin/AdminOrderDashboard";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -69,8 +70,9 @@ const App = () => {
         <Route path="/pay-with-reward" element={<PayWithReward />} />
         <Route path="/location-dashboard" element={<LocationDashboard />} />
         <Route path="/reward-dashboard" element={<RewardDetail />} />
-        <Route path="/order-dashboard" element={<OrderDashboard />} />
-
+        {/* <Route path="/order-dashboard" element={<OrderDashboard />} /> */}
+        <Route path="/order-dashboard" element={<AdminOrderDashboard />} />
+        
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/user-management" element={<UserManagement />} />

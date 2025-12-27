@@ -5,22 +5,29 @@ const API = "https://dotcombackend-xu8o.onrender.com/api/cart";
 
 const getToken = () => localStorage.getItem("token");
 
-// ✅ Get logged-in user's cart
+// ✅ Axios config helper
+const authConfig = () => ({
+  headers: {
+    Authorization: `Bearer ${getToken()}`,
+  },
+});
+
+// ✅ Get cart
 export const fetchCartThunk = createAsyncThunk(
   "cart/fetch",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get(API, {
-        headers: { Authorization: `Bearer ${getToken()}` },
-      });
+      const res = await axios.get(API, authConfig());
       return res.data;
     } catch (err) {
-      return rejectWithValue("Cart fetch failed");
+      return rejectWithValue(
+        err.response?.data?.message || "Cart fetch failed"
+      );
     }
   }
 );
 
-// ✅ Add item to cart
+// ✅ Add to cart
 export const addToCartThunk = createAsyncThunk(
   "cart/add",
   async ({ productId, quantity = 1, size = "M" }, { rejectWithValue }) => {
@@ -28,33 +35,36 @@ export const addToCartThunk = createAsyncThunk(
       const res = await axios.post(
         `${API}/add`,
         { productId, quantity, size },
-        {
-          headers: { Authorization: `Bearer ${getToken()}` },
-        }
+        authConfig()
       );
-      return res.data; // updated cart
+      return res.data;
     } catch (err) {
-      return rejectWithValue("Add to cart failed");
+      return rejectWithValue(
+        err.response?.data?.message || "Add to cart failed"
+      );
     }
   }
 );
 
-// ✅ Remove product from cart (by productId)
+// ✅ Remove from cart
 export const removeFromCartThunk = createAsyncThunk(
   "cart/remove",
   async (productId, { rejectWithValue }) => {
     try {
-      const res = await axios.delete(`${API}/remove/${productId}`, {
-        headers: { Authorization: `Bearer ${getToken()}` },
-      });
-      return res.data; // updated cart
+      const res = await axios.delete(
+        `${API}/remove/${productId}`,
+        authConfig()
+      );
+      return res.data;
     } catch (err) {
-      return rejectWithValue("Remove from cart failed");
+      return rejectWithValue(
+        err.response?.data?.message || "Remove from cart failed"
+      );
     }
   }
 );
 
-// ✅ Update quantity (by cartItemId)
+// ✅ Update quantity
 export const updateCartQtyThunk = createAsyncThunk(
   "cart/updateQty",
   async ({ cartItemId, quantity }, { rejectWithValue }) => {
@@ -62,11 +72,16 @@ export const updateCartQtyThunk = createAsyncThunk(
       const res = await axios.put(
         `${API}/update/${cartItemId}`,
         { quantity },
-        { headers: { Authorization: `Bearer ${getToken()}` } }
+        authConfig()
       );
-      return res.data; // updated cart
+      return res.data;
     } catch (err) {
-      return rejectWithValue("Update quantity failed");
+      return rejectWithValue(
+        err.response?.data?.message || "Update quantity failed"
+      );
     }
   }
 );
+
+
+

@@ -5,7 +5,7 @@ import cartReducer from "./slices/cartSlice";
 import addressReducer from "./slices/addressSlice";
 import orderReducer from "./slices/orderSlice";
 import paymentReducer from "./slices/paymentSlice";
-
+import adminOrderReducer from "./slices/adminOrderSlice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +15,7 @@ export const store = configureStore({
     address: addressReducer,
     order: orderReducer,
     payment: paymentReducer,
+    adminOrder: adminOrderReducer,
   },
 });
 
