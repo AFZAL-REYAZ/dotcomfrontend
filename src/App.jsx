@@ -38,6 +38,7 @@ import ShippingDelivery from "./pages/policyPages/ShippingDelivery";
 import AllProduct from "./components/AllProduct";
 import OrderDashboard from "./pages/admin/OrderDashboard";
 import AdminOrderDashboard from "./pages/admin/AdminOrderDashboard";
+import ChangePassword from "./pages/ChangePassword";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -72,14 +73,14 @@ const App = () => {
         <Route path="/reward-dashboard" element={<RewardDetail />} />
         {/* <Route path="/order-dashboard" element={<OrderDashboard />} /> */}
         <Route path="/order-dashboard" element={<AdminOrderDashboard />} />
-        
+
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/user-management" element={<UserManagement />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/addproduct" element={<AddProduct />} />
-
+        <Route path="/change-password" element={<ChangePassword />} />
         <Route path="/add-address" element={<AddAddress />} />
         <Route path="/check-out" element={<CheckoutPage />} />
         <Route path="/order-success" element={<OrderSuccess />} />

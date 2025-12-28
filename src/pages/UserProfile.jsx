@@ -112,8 +112,8 @@ const UserProfile = () => {
         <div className="mt-4 bg-gray-50 rounded-lg p-4">
           <p className="text-gray-500 text-sm">Available Reward Points</p>
           <span className="text-xl">🪙</span> <span className="font-semibold text-gray-600 text-lg">
-  {user?.rewardCoins ?? 0}
-</span>
+            {user?.rewardCoins ?? 0}
+          </span>
 
           <div className="flex justify-between text-blue-500 text-sm mt-3">
             <button>How to earn</button>
@@ -127,15 +127,16 @@ const UserProfile = () => {
         <p className="px-4 py-3 font-semibold text-gray-700">More</p>
 
         {[
-          { label: "Notification Center", icon: <MdNotificationsNone /> },
-          { label: "Help and Support", icon: <MdHelpOutline /> },
-          { label: "FAQs", icon: <MdQuestionAnswer /> },
-          { label: "Terms & conditions", icon: <MdGavel /> },
-          { label: "Get in touch", icon: <MdCall /> },
+          // { label: "Notification Center", icon: <MdNotificationsNone />, path: "/change-password", },
+          { label: "Help and Support", icon: <MdHelpOutline />, path: "/contact-us", },
+          { label: "Change Password", icon: <MdQuestionAnswer />, path: "/change-password", },
+          { label: "Terms & conditions", icon: <MdGavel />, path: "/terms-conditions", },
+          { label: "Get in touch", icon: <MdCall />, path: "/contact-us", },
         ].map((item, idx) => (
           <div
             key={idx}
             className="flex justify-between items-center px-4 py-3 border-t cursor-pointer"
+            onClick={() => navigate(item.path)}
           >
             <div className="flex items-center gap-3 text-gray-700">
               <span className="text-xl">{item.icon}</span>
