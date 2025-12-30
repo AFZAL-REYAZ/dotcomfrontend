@@ -32,7 +32,7 @@ export const updateOrderStatusThunk = createAsyncThunk(
   async ({ orderId, status }, { rejectWithValue }) => {
     try {
       const res = await axios.put(
-        `${API}/admin/update-status/${orderId}`,
+        `${API}/update-status/${orderId}`,
         { status },
         { headers: token() }
       );

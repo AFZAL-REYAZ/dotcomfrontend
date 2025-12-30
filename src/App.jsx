@@ -40,6 +40,8 @@ import OrderDashboard from "./pages/admin/OrderDashboard";
 import AdminOrderDashboard from "./pages/admin/AdminOrderDashboard";
 import ChangePassword from "./pages/ChangePassword";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ResetPassword from "./pages/ResetPassword";
+import AdminOrderDetails from "./pages/admin/AdminOrderDetails";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -73,6 +75,7 @@ const App = () => {
         <Route path="/reward-dashboard" element={<RewardDetail />} />
         {/* <Route path="/order-dashboard" element={<OrderDashboard />} /> */}
         <Route path="/order-dashboard" element={<AdminOrderDashboard />} />
+        <Route path="/admin/orders/:id" element={<AdminOrderDetails />} />
 
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
@@ -85,7 +88,8 @@ const App = () => {
         <Route path="/check-out" element={<CheckoutPage />} />
         <Route path="/order-success" element={<OrderSuccess />} />
         <Route path="/my-orders" element={<MyOrders />} />
-
+        <Route path="/reset-password" element={<ResetPassword />} />
+        
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/privacy-policy" element={<Privacy />} />
         <Route path="/terms-conditions" element={<TermsAndConditions />} />

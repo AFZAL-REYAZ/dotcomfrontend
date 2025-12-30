@@ -19,7 +19,10 @@ export default function AllProduct() {
   }, [dispatch, category, search]);
 
   if (loading) {
-    return <div className="text-center pt-20">Loading...</div>;
+    return <div className="text-center pt-20 text-gray-700">
+      <h2 className="text-xl">Loading...</h2>
+      <h2>Finding best product for you</h2>
+      </div>;
   }
 
   return (

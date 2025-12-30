@@ -1,21 +1,13 @@
 import axios from "axios";
 
-// Get profile
-export const getProfile = async () => {
-  const token = localStorage.getItem("token");
-  if (!token) throw new Error("No token found");
+const API = "https://dotcombackend-xu8o.onrender.com/api/useroutes";
 
-  return await axios.get("http://localhost:5000/api/auth/profile", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-};
 
-// Update profile
-export const updateProfile = async (data) => {
-  const token = localStorage.getItem("token");
-  if (!token) throw new Error("No token found");
+export const sendOtpApi = (mobile) =>
+  axios.post(`${API}/send-otp`, { mobile });
 
-  return await axios.put("http://localhost:5000/api/auth/update", data, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-};
+export const verifyOtpApi = (mobile, otp) =>
+  axios.post(`${API}/verify-otp`, { mobile, otp });
+
+export const resetPasswordApi = (mobile, newPassword) =>
+  axios.post(`${API}/reset-password`, { mobile, newPassword });

@@ -125,6 +125,9 @@ const Login = () => {
           <Link to="/signup" className="text-black font-medium hover:underline">
             Sign Up
           </Link>
+          <Link to="/reset-password" className="text-red font-medium hover:underline">
+            ResetPassword
+          </Link>
         </p>
       </div>
     </div>

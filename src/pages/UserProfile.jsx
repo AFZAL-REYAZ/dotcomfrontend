@@ -32,7 +32,7 @@ const UserProfile = () => {
         <button onClick={() => navigate(-1)} className="text-2xl text-gray-600 font-light">
           ←
         </button>
-        <h1 className="text-gray-600 font-semibold">My Account</h1>
+        <h2 className="text-gray-600 font-semibold">My Account</h2>
       </div>
 
       {/* PROFILE CARD */}

@@ -86,9 +86,9 @@ export default function ProductDetail() {
         <div className="flex flex-col gap-5">
 
           {/* TITLE */}
-          <h1 className="text-3xl font-semibold text-gray-900">
+          <h2 className="text-2xl font-semibold text-gray-900">
             {product.name}
-          </h1>
+          </h2>
 
           {/* RATING */}
           <div className="flex items-center gap-1 text-amber-500">
@@ -102,7 +102,7 @@ export default function ProductDetail() {
 
           {/* PRICE */}
           <div className="flex items-center gap-3 mt-2">
-            <span className="text-3xl font-bold text-gray-900">
+            <span className="text-xl font-bold text-gray-900">
               ₹{product.price}
             </span>
             {product.mrp && (
@@ -148,17 +148,17 @@ export default function ProductDetail() {
           <div className="flex gap-4 mt-8">
             <button
               onClick={addToCart}
-              className="flex-1 py-3 rounded-lg border border-amber-700 text-amber-700 font-semibold hover:bg-amber-50 transition"
+              className="flex-1 py-3 rounded-lg border bg-amber-700 text-white-700 font-semibold hover:bg-amber-50 transition"
             >
               Add to Cart
             </button>
 
-            <button
+            {/* <button
               onClick={() => navigate("/contactus")}
               className="flex-1 py-3 rounded-lg bg-amber-700 text-white font-semibold hover:bg-amber-800 transition"
             >
               Buy Now
-            </button>
+            </button> */}
           </div>
 
           {/* TRUST INFO */}

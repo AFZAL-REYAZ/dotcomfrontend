@@ -4,8 +4,10 @@ import {
   getAllOrdersAdminThunk,
   updateOrderStatusThunk,
 } from "../../redux/thunks/adminOrderThunk";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminOrderDashboard() {
+  const navigate=useNavigate();
   const dispatch = useDispatch();
   const { orders, loading } = useSelector((state) => state.adminOrder);
 
@@ -18,13 +20,13 @@ export default function AdminOrderDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 px-6 py-10">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-100 px-6 ">
+      <div className="max-w-7xl mx-auto pt-20">
 
         {/* HEADER */}
-        <h1 className="text-2xl font-semibold text-gray-900 mb-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">
           Admin Order Management
-        </h1>
+        </h2>
 
         {/* TABLE */}
         <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-x-auto">
@@ -73,12 +75,15 @@ export default function AdminOrderDashboard() {
                       key={order._id}
                       className="border-b border-gray-200 hover:bg-gray-50 transition"
                     >
-                      <td className="px-4 py-3 font-medium text-gray-900">
+                      <td
+                        className="px-4 py-3 font-medium text-blue-600 cursor-pointer"
+                        onClick={() => navigate(`/admin/orders/${order._id}`)}
+                      >
                         #{order._id.slice(-6)}
                       </td>
 
                       <td className="px-4 py-3">
-                        {order.user?.email || "—"}
+                        {order.user?.mobile || "—"}
                       </td>
 
                       <td className="px-4 py-3 font-semibold text-gray-900">
