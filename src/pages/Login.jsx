@@ -1,22 +1,28 @@
-// src/pages/Login.jsx
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useDispatch } from "react-redux";
+import { Eye, EyeOff } from "lucide-react";
+import axiosInstance from "../api/axiosInstance";
 import { loginUser } from "../redux/slices/authSlice";
-import { Eye, EyeOff } from "lucide-react"; // 👁️ icons
 
 const Login = () => {
-  const [formData, setFormData] = useState({ mobile: "", password: "" });
+  const [formData, setFormData] = useState({
+    mobile: "",
+    password: "",
+  });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // 👁️ toggle
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleChange = (e) =>
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,19 +30,20 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post(
-        "https://dotcombackend-xu8o.onrender.com/api/useroutes/login",
+      const res = await axiosInstance.post(
+        "/useroutes/login",
         formData
       );
 
-      if (res.status === 200) {
-        const { token, user } = res.data;
+      const { token, user } = res.data;
 
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        dispatch(loginUser({ token, user }));
+      // Save token
+      localStorage.setItem("token", token);
 
-        navigate("/");
-      }
+      // Update redux
+      dispatch(loginUser({ token, user }));
+
+      navigate("/");
     } catch (err) {
       setError(
         err.response?.data?.message ||
@@ -50,6 +57,7 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 space-y-6">
+
         <h2 className="text-2xl font-bold text-center text-gray-800">
           Welcome Back
         </h2>
@@ -61,6 +69,7 @@ const Login = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
+
           {/* MOBILE */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -95,7 +104,6 @@ const Login = () => {
                 placeholder="Enter your password"
               />
 
-              {/* 👁️ Toggle Button */}
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
@@ -112,7 +120,7 @@ const Login = () => {
             disabled={loading}
             className={`w-full py-2.5 rounded-md font-semibold transition ${
               loading
-                ? "bg-gray-400 text-white cursor-not-allowed"
+                ? "bg-gray-400 cursor-not-allowed text-white"
                 : "bg-black text-white hover:bg-gray-900"
             }`}
           >
@@ -125,10 +133,17 @@ const Login = () => {
           <Link to="/signup" className="text-black font-medium hover:underline">
             Sign Up
           </Link>
-          <Link to="/reset-password" className="text-red font-medium hover:underline">
-            ResetPassword
+        </p>
+
+        <p className="text-center text-sm">
+          <Link
+            to="/reset-password"
+            className="text-blue-600 hover:underline"
+          >
+            Forgot Password?
           </Link>
         </p>
+
       </div>
     </div>
   );

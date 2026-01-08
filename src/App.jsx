@@ -42,6 +42,8 @@ import ChangePassword from "./pages/ChangePassword";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ResetPassword from "./pages/ResetPassword";
 import AdminOrderDetails from "./pages/admin/AdminOrderDetails";
+import OrderDetails from "./pages/OrderDetails";
+import SavedAddresses from "./pages/SavedAdresses";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -76,6 +78,8 @@ const App = () => {
         {/* <Route path="/order-dashboard" element={<OrderDashboard />} /> */}
         <Route path="/order-dashboard" element={<AdminOrderDashboard />} />
         <Route path="/admin/orders/:id" element={<AdminOrderDetails />} />
+        <Route path="/order/:id" element={<OrderDetails />} />
+        
 
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
@@ -89,12 +93,15 @@ const App = () => {
         <Route path="/order-success" element={<OrderSuccess />} />
         <Route path="/my-orders" element={<MyOrders />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/saved-addresses" element={<SavedAddresses />} />
+
         
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/privacy-policy" element={<Privacy />} />
         <Route path="/terms-conditions" element={<TermsAndConditions />} />
         <Route path="/cancellation-refund-policy" element={<CancellationRefund />} />
         <Route path="/shipping-delivery-policy" element={<ShippingDelivery />} />
+
       </Routes>
 
       <Footer />

@@ -1,60 +1,74 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const API = "https://dotcombackend-xu8o.onrender.com/api/orders";
-
-// Send token as Bearer <token> — REQUIRED by your backend
-const token = () => ({
-  Authorization: `Bearer ${localStorage.getItem("token")}`,
-});
+import axiosInstance from "../../api/axiosInstance";
 
 /* =====================================================
-   ⭐ 1. PLACE ORDER
+   ⭐ PLACE ORDER
 ===================================================== */
 export const placeOrderThunk = createAsyncThunk(
   "order/placeOrder",
   async ({ addressId, paymentMethod }, { rejectWithValue }) => {
     try {
-      const res = await axios.post(
-        `${API}/create`,
-        { addressId, paymentMethod },
-        { headers: token() }
-      );
+      const res = await axiosInstance.post("/orders/create", {
+        addressId,
+        paymentMethod,
+      });
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data || "Order failed");
+      return rejectWithValue(
+        err.response?.data?.message || "Order failed"
+      );
     }
   }
 );
 
 /* =====================================================
-   ⭐ 2. GET MY ORDERS (Order History)
+   ⭐ GET MY ORDERS
 ===================================================== */
 export const getMyOrdersThunk = createAsyncThunk(
   "order/getMyOrders",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`${API}/my-orders`, { headers: token() });
+      const res = await axiosInstance.get("/orders/my-orders");
       return res.data.orders;
     } catch (err) {
-      return rejectWithValue(err.response?.data || "Failed to fetch orders");
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to fetch orders"
+      );
     }
   }
 );
 
 /* =====================================================
-   ⭐ 3. GET ORDER DETAILS
+   ⭐ GET ORDER DETAILS
 ===================================================== */
 export const getOrderDetailsThunk = createAsyncThunk(
   "order/getOrderDetails",
   async (orderId, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`${API}/details/${orderId}`, {
-        headers: token(),
-      });
+      const res = await axiosInstance.get(`/orders/details/${orderId}`);
       return res.data.order;
     } catch (err) {
-      return rejectWithValue(err.response?.data || "Failed to fetch details");
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to fetch order details"
+      );
+    }
+  }
+);
+
+/* =====================================================
+   ⭐ CHECKOUT PRICE SUMMARY (FROM BACKEND)
+===================================================== */
+export const getCheckoutSummaryThunk = createAsyncThunk(
+  "order/getCheckoutSummary",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.get("/orders/checkout-summary");
+      return res.data; 
+      // { subTotal, gstAmount, deliveryCharge, promiseFee, grandTotal, cgst, sgst }
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to load checkout summary"
+      );
     }
   }
 );

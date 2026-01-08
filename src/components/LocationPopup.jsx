@@ -1,84 +1,81 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, X, Loader2 } from "lucide-react";
 
 function LocationPopup() {
   const [showPopup, setShowPopup] = useState(true);
-  const [location, setLocation] = useState({ lat: "", lon: "", address: "" });
+  const [location, setLocation] = useState({
+    lat: "",
+    lon: "",
+    address: "",
+  });
   const [loading, setLoading] = useState(false);
   const [fetchingAddress, setFetchingAddress] = useState(false);
 
-  // ✅ Get user location with high accuracy
+  /* ===============================
+     GET LOCATION
+  =============================== */
   const getLocation = () => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude, accuracy } = position.coords;
-          console.log("✅ Exact GPS:", latitude, longitude, "Accuracy:", accuracy, "m");
-
-          setLocation({ lat: latitude, lon: longitude });
-          // Fetch address from OpenCage
-          fetchAddress(latitude, longitude);
-        },
-        (error) => {
-          console.error("❌ Location error:", error);
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              alert("Location permission denied. Please allow it to continue.");
-              break;
-            case error.POSITION_UNAVAILABLE:
-              alert("Location information is unavailable.");
-              break;
-            case error.TIMEOUT:
-              alert("Location request timed out. Try again.");
-              break;
-            default:
-              alert("An unknown error occurred.");
-          }
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 15000,
-          maximumAge: 0,
-        }
-      );
-    } else {
-      alert("Geolocation is not supported by your browser.");
+    if (!navigator.geolocation) {
+      alert("Geolocation not supported");
+      return;
     }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        setLocation({ lat: latitude, lon: longitude, address: "" });
+        fetchAddress(latitude, longitude);
+      },
+      () => alert("Location permission denied"),
+      { enableHighAccuracy: true, timeout: 15000 }
+    );
   };
 
-  // ✅ Fetch readable address from OpenCage API
+  /* ===============================
+     FETCH ADDRESS (OpenCage)
+  =============================== */
   const fetchAddress = async (lat, lon) => {
     try {
       setFetchingAddress(true);
-      const apiKey = "fcddeadd5fd540a393c340a620158e7e"; // your OpenCage key
+
+      const key = import.meta.env.VITE_OPENCAGE_KEY;
       const res = await axios.get(
-        `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${apiKey}`
+        `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${key}`
       );
-      const address = res.data.results[0]?.formatted || "Address not found";
+
+      const address =
+        res.data.results?.[0]?.formatted || "Address not found";
+
       setLocation((prev) => ({ ...prev, address }));
-      setFetchingAddress(false);
-    } catch (error) {
-      console.error("Failed to fetch address:", error);
+    } catch (err) {
+      console.error("Address fetch failed", err);
+    } finally {
       setFetchingAddress(false);
     }
   };
 
-  // ✅ Submit location to backend
+  /* ===============================
+     SUBMIT LOCATION (axiosInstance)
+  =============================== */
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      await axios.post("https://dotcombackend.onrender.com/api/location", {
-        lat: location.lat,
-        lon: location.lon,
+
+      await axiosInstance.post("/location", {
+        latitude: location.lat,
+        longitude: location.lon,
+        address: location.address,
       });
-      setLoading(false);
-      alert("✅ Location saved successfully!");
+
+      alert("✅ Location saved");
       setShowPopup(false);
     } catch (err) {
-      console.error(err);
-      alert("❌ Failed to save location.");
+      console.error("Save location error", err);
+      alert("❌ Failed to save location");
+    } finally {
       setLoading(false);
     }
   };
@@ -94,57 +91,54 @@ function LocationPopup() {
           initial={{ y: "100%" }}
           animate={{ y: 0 }}
           exit={{ y: "100%" }}
-          transition={{ type: "spring", stiffness: 80, damping: 15 }}
-          style={popupContainer}
+          transition={{ type: "spring", stiffness: 90 }}
+          className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl z-50 p-5"
         >
-          <div style={popupContent}>
+          <div className="max-w-md mx-auto">
             {/* Header */}
-            <div style={headerRow}>
-              <div style={headerLeft}>
-                <MapPin size={24} color="#78350f" />
-                <h2 style={title}>Enable Your Location</h2>
+            <div className="flex justify-between items-center mb-2">
+              <div className="flex items-center gap-2">
+                <MapPin size={22} />
+                <h3 className="font-semibold">Enable Location</h3>
               </div>
-              <button style={closeBtn} onClick={() => setShowPopup(false)}>
-                <X size={20} color="#475569" />
+              <button onClick={() => setShowPopup(false)}>
+                <X size={18} />
               </button>
             </div>
 
-            {/* Info */}
-            <p style={subtitle}>
-              We use your location to show nearby stores and personalized offers.
+            <p className="text-sm text-gray-500 mb-3">
+              We use your location to personalize services.
             </p>
 
-            {/* Address box */}
-            <div style={coordsBox}>
+            {/* Location Box */}
+            <div className="bg-gray-50 border rounded-lg p-3 text-sm mb-4">
               {fetchingAddress ? (
-                <div style={{ textAlign: "center", color: "#6b7280" }}>
-                  <Loader2 size={20} className="animate-spin inline-block" /> Fetching address...
-                </div>
+                <p className="text-gray-500">
+                  <Loader2 className="inline animate-spin mr-2" />
+                  Fetching address...
+                </p>
               ) : (
                 <>
-                  <p><b>Latitude:</b> {location.lat || "--"}</p>
-                  <p><b>Longitude:</b> {location.lon || "--"}</p>
-                  <p>
-                    <b>Address:</b>{" "}
-                    {location.address ? (
-                      <span style={{ color: "#374151" }}>{location.address}</span>
-                    ) : (
-                      "Fetching..."
-                    )}
-                  </p>
+                  <p><b>Lat:</b> {location.lat || "--"}</p>
+                  <p><b>Lon:</b> {location.lon || "--"}</p>
+                  <p><b>Address:</b> {location.address || "--"}</p>
                 </>
               )}
             </div>
 
             {/* Buttons */}
-            <div style={btnRow}>
-              <button style={cancelBtn} onClick={() => setShowPopup(false)}>
-                Maybe Later
-              </button>
+            <div className="flex gap-2">
               <button
-                style={submitBtn}
-                onClick={handleSubmit}
+                className="flex-1 bg-gray-100 py-2 rounded"
+                onClick={() => setShowPopup(false)}
+              >
+                Later
+              </button>
+
+              <button
                 disabled={loading || fetchingAddress}
+                onClick={handleSubmit}
+                className="flex-1 bg-black text-white py-2 rounded"
               >
                 {loading ? "Saving..." : "Share Location"}
               </button>
@@ -155,99 +149,5 @@ function LocationPopup() {
     </AnimatePresence>
   );
 }
-
-/* 🎨 Inline Styles (modern & responsive) */
-const popupContainer = {
-  position: "fixed",
-  bottom: 0,
-  left: 0,
-  right: 0,
-  background: "#fff",
-  borderTopLeftRadius: "20px",
-  borderTopRightRadius: "20px",
-  boxShadow: "0 -4px 20px rgba(0,0,0,0.15)",
-  padding: "20px 20px 25px",
-  zIndex: 1000,
-};
-
-const popupContent = {
-  maxWidth: "500px",
-  margin: "0 auto",
-  color: "#1f2937",
-  fontFamily: "Poppins, sans-serif",
-};
-
-const headerRow = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-};
-
-const headerLeft = {
-  display: "flex",
-  alignItems: "center",
-  gap: "8px",
-};
-
-const title = {
-  fontSize: "18px",
-  fontWeight: "600",
-  color: "#0f172a",
-};
-
-const subtitle = {
-  fontSize: "14px",
-  color: "#475569",
-  marginTop: "6px",
-  marginBottom: "15px",
-};
-
-const coordsBox = {
-  background: "#f8fafc",
-  border: "1px solid #e2e8f0",
-  borderRadius: "10px",
-  padding: "10px 12px",
-  fontSize: "13px",
-  color: "#334155",
-  marginBottom: "20px",
-  minHeight: "70px",
-};
-
-const btnRow = {
-  display: "flex",
-  justifyContent: "space-between",
-  gap: "10px",
-};
-
-const cancelBtn = {
-  flex: 1,
-  padding: "10px 0",
-  background: "#f1f5f9",
-  color: "#475569",
-  borderRadius: "8px",
-  border: "none",
-  cursor: "pointer",
-  fontWeight: "500",
-  transition: "0.2s",
-};
-
-const submitBtn = {
-  flex: 1,
-  padding: "10px 0",
-  background: "#92400e",
-  color: "white",
-  borderRadius: "8px",
-  border: "none",
-  cursor: "pointer",
-  fontWeight: "600",
-  transition: "0.2s",
-};
-
-const closeBtn = {
-  background: "transparent",
-  border: "none",
-  cursor: "pointer",
-  padding: "5px",
-};
 
 export default LocationPopup;

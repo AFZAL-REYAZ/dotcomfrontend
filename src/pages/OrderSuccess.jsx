@@ -27,11 +27,11 @@ export default function OrderSuccess() {
         </svg>
       </div>
 
-      <h1 className="text-3xl font-bold text-green-700">Order Placed Successfully!</h1>
+      <h2 className="text-xl font-bold text-green-700">Order Placed Successfully!</h2>
 
       {/* Order ID */}
       {orderId && (
-        <p className="mt-2 text-lg text-gray-700">
+        <p className="mt-2 text-lg text-gray-600">
           Your Order ID: <span className="font-semibold">{orderId}</span>
         </p>
       )}

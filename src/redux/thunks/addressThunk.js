@@ -1,59 +1,97 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const API = "https://dotcombackend-xu8o.onrender.com/api/useroutes";
-
-const token = () => ({
-  Authorization: `Bearer ${localStorage.getItem("token")}`
-});
-
+import axiosInstance from "../../api/axiosInstance";
 
 // =====================================
 // ⭐ FETCH ADDRESSES
 // =====================================
-export const fetchAddresses = createAsyncThunk("address/fetch", async () => {
-  const res = await axios.get(`${API}/addresses`, { headers: token() });
-  return res.data;
-});
+export const fetchAddresses = createAsyncThunk(
+  "address/fetch",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.get("/useroutes/addresses");
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to fetch addresses"
+      );
+    }
+  }
+);
 
 // =====================================
 // ⭐ ADD ADDRESS
-// customer can add adress 
 // =====================================
-export const addAddress = createAsyncThunk("address/add", async (data) => {
-  const res = await axios.post(`${API}/add-address`, data, { headers: token() });
-  return res.data.addresses;
-});
+export const addAddress = createAsyncThunk(
+  "address/add",
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.post(
+        "/useroutes/add-address",
+        data
+      );
+      return res.data.addresses;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to add address"
+      );
+    }
+  }
+);
 
 // =====================================
 // ⭐ DELETE ADDRESS
-// from here customer can delete address 
 // =====================================
-export const deleteAddress = createAsyncThunk("address/delete", async (id) => {
-  const res = await axios.delete(`${API}/address/${id}`, { headers: token() });
-  return res.data.addresses;
-});
+export const deleteAddress = createAsyncThunk(
+  "address/delete",
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.delete(
+        `/useroutes/address/${id}`
+      );
+      return res.data.addresses;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to delete address"
+      );
+    }
+  }
+);
 
 // =====================================
 // ⭐ UPDATE ADDRESS
-// customer can updated address 
 // =====================================
 export const updateAddress = createAsyncThunk(
   "address/update",
-  async ({ id, data }) => {
-    const res = await axios.put(`${API}/address/${id}`, data, { headers: token() });
-    return res.data.addresses;
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.put(
+        `/useroutes/address/${id}`,
+        data
+      );
+      return res.data.addresses;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to update address"
+      );
+    }
   }
 );
 
 // =====================================
 // ⭐ SET DEFAULT ADDRESS
-// this is customer default parmanent detail where product will delever
 // =====================================
 export const setDefaultAddress = createAsyncThunk(
   "address/default",
-  async (id) => {
-    const res = await axios.patch(`${API}/address/set-default/${id}`, {}, { headers: token() });
-    return res.data.addresses;
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.patch(
+        `/useroutes/address/set-default/${id}`
+      );
+      return res.data.addresses;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to set default address"
+      );
+    }
   }
 );

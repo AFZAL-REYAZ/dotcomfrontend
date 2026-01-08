@@ -1,187 +1,179 @@
 // src/components/Header.jsx
 import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Search, User, ShoppingBag } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Menu, X, Search, User, ShoppingBag, LogOut, LogIn } from "lucide-react";
 import { useSelector } from "react-redux";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
   const [searchText, setSearchText] = useState("");
-  // 👈 Get user from Redux (NOT localStorage)
-  // const user = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
+  const { items } = useSelector((state) => state.cart);
+
+  const cartCount = items.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
   const { user } = useSelector((state) => state.auth);
-  // Close menu on outside click
+
+  /* Close menu on outside click */
   useEffect(() => {
-    const handleOutsideClick = (event) => {
-      // Check if clicked outside sidebar and button
+    const handleOutsideClick = (e) => {
       if (
-        !event.target.closest(".sidebar-menu") &&
-        !event.target.closest(".menu-button")
+        !e.target.closest(".sidebar-menu") &&
+        !e.target.closest(".menu-button")
       ) {
         setMenuOpen(false);
       }
     };
 
     if (menuOpen) {
-      // Use 'mousedown' instead of 'click' for better timing
       document.addEventListener("mousedown", handleOutsideClick);
     }
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, [menuOpen]);
-
 
   return (
     <header className="fixed top-0 left-0 z-50 w-full bg-white border-b shadow-sm">
-      <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between relative">
-        {/* Left: Hamburger + Search */}
-        <div className="flex items-center gap-3 sm:gap-4">
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="menu-button p-2 rounded-md hover:bg-gray-100 transition"
-            aria-label="Open menu"
-            title="Menu"
-          >
-            {menuOpen ? (
-              <X className="text-gray-900" size={22} />
-            ) : (
-              <Menu className="text-gray-900" size={22} />
-            )}
-          </button>
+      {/* ================= TOP BAR ================= */}
+      <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
 
-
-        </div>
-
-        {/* Center: Brand */}
-        {/* <Link
-          to="/"
-          className="absolute left-1/2 -translate-x-1/2 text-black font-extrabold text-xl sm:text-2xl tracking-wide uppercase select-none"
+        {/* Left */}
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="menu-button p-2 rounded-lg hover:bg-gray-100 transition text-gray-700"
         >
-          DOTCOM
-        </Link> */}
-        {/* Search bar */}
-        <div className="flex flex-row sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <button
-              aria-label="scan"
-              onClick={() => navigate(`/products?search=${searchText}`)}
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full "
-            >
-              <Search className="text-gray-900" size={15} />
-            </button>
-            <input
-              type="text"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  navigate(`/products?search=${searchText}`);
-                  setMenuOpen(false);
-                }
-              }}
-              placeholder="What are you looking for?"
-              className="w-full border text-black border-gray-200 rounded-full py-1 pl-10 pr-2 shadow-sm focus:outline-none"
-            />
-          </div>
+          {menuOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+
+        {/* Search */}
+        <div className="relative w-full max-w-sm mx-4">
+          <Search
+            size={16}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+          />
+          <input
+            type="text"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                navigate(`/products?search=${searchText}`);
+                setMenuOpen(false);
+              }
+            }}
+            placeholder="Search products..."
+            className="w-full rounded-full border border-gray-200 py-1.5 pl-9 pr-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-500"
+          />
         </div>
 
-        {/* Right: Profile + Cart */}
-        <div className="flex items-center gap-3 sm:gap-4">
-          <Link
-            to="/profile"
-            className="p-2 rounded-md hover:bg-gray-100 transition"
-            aria-label="Account"
-            title="Account"
-          >
-            <User className="text-gray-900" size={22} />
+        {/* Right */}
+        <div className="flex items-center gap-3">
+          <Link className="p-2 rounded-lg hover:bg-gray-100 text-gray-700" to="/profile">
+            <User size={22} />
           </Link>
+          <Link className="p-2 rounded-lg hover:bg-gray-100 text-gray-700" to="/addtocart">
+            <div className="relative">
+              <ShoppingBag size={22} />
 
-          <Link
-            to="/addtocart"
-            className="p-2 rounded-md hover:bg-gray-100 transition"
-            aria-label="Cart"
-            title="Cart"
-          >
-            <ShoppingBag className="text-gray-900" size={22} />
+              {/* Cart Badge */}
+              {cartCount > 0 && (
+                <span className="
+                    absolute -top-2 -right-2
+                    bg-red-600 text-white
+                    text-[10px] font-bold
+                    h-5 min-w-[20px]
+                    px-1 rounded-full
+                    flex items-center justify-center
+                  ">
+                  {cartCount}
+                </span>
+              )}
+            </div>
           </Link>
         </div>
       </div>
 
-      {/* ✅ Sidebar Menu (Left to Right – Professional Look) */}
+      {/* ================= SIDEBAR ================= */}
       <div
-        className={`fixed top-0 left-0 h-[97%] bg-white/95 backdrop-blur-md shadow-2xl border-r border-gray-200 sidebar-menu z-40 transition-all duration-300 ease-in-out ${menuOpen ? "translate-x-0 w-[70%] sm:w-[40%] md:w-[30%]" : "-translate-x-full w-[70%]"
-          }`}
+        className={`fixed top-0 left-0 h-full bg-white sidebar-menu shadow-2xl z-40 transition-transform duration-300
+        ${menuOpen ? "translate-x-0 w-[75%] sm:w-[45%] md:w-[30%]" : "-translate-x-full w-[75%]"}`}
       >
-        {/* Top Section – Brand */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-gradient-to-r from-gray-900 to-gray-800">
-          <h2 className="text-lg font-extrabold text-white tracking-wider">DOTCOM</h2>
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600">
+          <h2 className="text-white font-bold text-lg tracking-wide">
+            DOTCOM
+          </h2>
           <button
             onClick={() => setMenuOpen(false)}
-            className="text-gray-200 hover:text-white transition"
-            aria-label="Close menu"
+            className="text-white opacity-80 hover:opacity-100"
           >
-            ✕
+            <X size={20} />
           </button>
         </div>
 
-        {/* Navigation Links */}
-        <div className="flex flex-col p-5 gap-3">
-          <Link
-            to="/"
-            onClick={() => setMenuOpen(false)}
-            className="flex items-center gap-3 px-3 py-2.5 text-gray-800 rounded-lg hover:bg-gray-100 transition font-medium"
-          >
-            🏠 <span>Home</span>
-          </Link>
+        {/* Links */}
+        <div className="p-6 space-y-2 text-sm">
+
+          <MenuItem to="/" icon="🏠" label="Home" close={setMenuOpen} />
 
           {user?.role === "admin" && (
-            <Link
-              to="/dashboard"
-              onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 text-gray-800 rounded-lg hover:bg-gray-100 transition font-medium"
-            >
-              📊 <span>Dashboard</span>
-            </Link>
+            <MenuItem to="/dashboard" icon="📊" label="Dashboard" close={setMenuOpen} />
           )}
 
+          {!user && (
+            <MenuItem
+              to="/login"
+              icon={<LogIn size={16} />}
+              label="Login"
+              close={setMenuOpen}
+              highlight="blue"
+            />
+          )}
 
-          <Link
-            to="/signup"
-            onClick={() => setMenuOpen(false)}
-            className="flex items-center gap-3 px-3 py-2.5 text-gray-800 rounded-lg hover:bg-gray-100 transition font-medium"
-          >
-            📝 <span>Sign Up</span>
-          </Link>
+          {user && (
+            <>
+              <MenuItem to="/settings" icon="⚙️" label="Settings" close={setMenuOpen} />
 
-          <Link
-            to="/login"
-            onClick={() => setMenuOpen(false)}
-            className="flex items-center gap-3 px-3 py-2.5 text-gray-800 rounded-lg hover:bg-gray-100 transition font-medium"
-          >
-            🔐 <span>Login</span>
-          </Link>
-
-          <Link
-            to="/settings"
-            onClick={() => setMenuOpen(false)}
-            className="flex items-center gap-3 px-3 py-2.5 text-gray-800 rounded-lg hover:bg-gray-100 transition font-medium"
-          >
-            ⚙️ <span>Settings</span>
-          </Link>
+              <button
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  setMenuOpen(false);
+                  window.location.href = "/login";
+                }}
+                className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-red-600 hover:bg-red-50 transition font-medium"
+              >
+                <LogOut size={16} />
+                Logout
+              </button>
+            </>
+          )}
         </div>
 
-        {/* Footer Section */}
-        <div className="absolute bottom-4 left-0 w-full text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} DOTCOM. All rights reserved.
+        {/* Footer */}
+        <div className="absolute bottom-4 left-0 w-full text-center text-xs text-gray-500">
+          © {new Date().getFullYear()} DOTCOM
         </div>
       </div>
-
     </header>
   );
 };
+
+/* ================= REUSABLE MENU ITEM ================= */
+function MenuItem({ to, icon, label, close, highlight }) {
+  return (
+    <Link
+      to={to}
+      onClick={() => close(false)}
+      className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition
+      ${highlight === "blue"
+          ? "text-indigo-600 bg-indigo-50 hover:bg-indigo-100"
+          : "text-gray-800 hover:bg-gray-100"}`}
+    >
+      {icon}
+      {label}
+    </Link>
+  );
+}
 
 export default Header;

@@ -19,7 +19,7 @@ export default function MyOrders() {
 
   return (
     <div className="max-w-4xl mx-auto pt-20 p-6 min-h-screen bg-white text-black">
-      <h1 className="text-3xl font-bold mb-6">My Orders</h1>
+      <h2 className="text-3xl font-bold mb-6">My Orders</h2>
 
       <div className="space-y-6">
         {myOrders.map((order) => (
@@ -79,7 +79,7 @@ export default function MyOrders() {
                 to={`/order/${order._id}`}
                 className="text-blue-600 font-medium hover:underline"
               >
-                View Details →
+                View Order Status →
               </Link>
             </div>
           </div>

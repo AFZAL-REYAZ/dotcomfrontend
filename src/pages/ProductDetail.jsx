@@ -111,6 +111,17 @@ export default function ProductDetail() {
               </span>
             )}
           </div>
+          {/* STOCK STATUS */}
+          {product.stock > 0 ? (
+            <p className="text-sm text-green-600 font-medium">
+              In Stock ({product.stock} available)
+            </p>
+          ) : (
+            <p className="text-sm text-red-600 font-semibold">
+              Out of Stock
+            </p>
+          )}
+
 
           {/* DESCRIPTION */}
           <p className="text-gray-600 leading-relaxed">
@@ -123,32 +134,35 @@ export default function ProductDetail() {
               Quantity
             </span>
 
-            <div className="flex items-center border rounded-lg overflow-hidden text-gray-400">
-              <button
-                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                className="px-3 py-2 hover:bg-gray-100 text-gray-400"
-              >
-                <Minus size={16} />
-              </button>
+            <button
+              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+              disabled={product.stock === 0}
+              className="px-3 py-2 hover:bg-gray-100 disabled:opacity-50 text-gray-600"
+            >
+              <Minus size={16} />
+            </button>
 
-              <span className="px-5 text-sm font-medium text-gray-400">
-                {quantity}
-              </span>
+            <span className="px-5 text-sm font-medium text-gray-600">
+              {quantity}
+            </span>
 
-              <button
-                onClick={() => setQuantity((q) => q + 1)}
-                className="px-3 py-2 hover:bg-gray-100 text-gray-400"
-              >
-                <Plus size={16} />
-              </button>
-            </div>
+            <button
+              onClick={() =>
+                setQuantity((q) => Math.min(product.stock, q + 1))
+              }
+              disabled={quantity >= product.stock}
+              className="px-3 py-2 hover:bg-gray-100 disabled:opacity-50 text-gray-600"
+            >
+              <Plus size={16} />
+            </button>
+
           </div>
 
           {/* ACTION BUTTONS */}
           <div className="flex gap-4 mt-8">
             <button
               onClick={addToCart}
-              className="flex-1 py-3 rounded-lg border bg-amber-700 text-white-700 font-semibold hover:bg-amber-50 transition"
+              className="flex-1 py-3 rounded-lg border bg-amber-500 text-white-700 font-semibold hover:bg-amber-700 transition"
             >
               Add to Cart
             </button>

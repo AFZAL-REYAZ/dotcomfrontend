@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addAddress } from "../redux/thunks/addressThunk";
+import { useNavigate } from "react-router-dom";
 
 /* 🇮🇳 Indian States */
 const INDIAN_STATES = [
@@ -13,24 +14,28 @@ const INDIAN_STATES = [
   "Delhi","Jammu and Kashmir","Ladakh","Puducherry","Chandigarh",
   "Andaman and Nicobar Islands","Dadra and Nagar Haveli and Daman and Diu","Lakshadweep"
 ];
+const INITIAL_FORM = {
+  fullName: "",
+  phone: "",
+  pincode: "",
+  state: "",
+  city: "",
+  houseNo: "",
+  area: "",
+  landmark: "",
+};
+
+
+
 
 export default function AddAddressForm() {
   const dispatch = useDispatch();
-
-  const [form, setForm] = useState({
-    fullName: "",
-    phone: "",
-    pincode: "",
-    state: "",
-    city: "",
-    houseNo: "",
-    area: "",
-    landmark: "",
-  });
-
+  const [form, setForm] = useState(INITIAL_FORM);
+  const [errorMsg, setErrorMsg] = useState("");
+  const navigate=useNavigate();
   const [loadingPin, setLoadingPin] = useState(false);
   const [pinMsg, setPinMsg] = useState("");
-
+  const isDisabled =!form.fullName || !form.phone || !form.pincode || !form.city || !form.state;
   /* 🔄 Fetch city & state from pincode */
   const fetchFromPincode = async (pin) => {
     try {
@@ -72,13 +77,31 @@ export default function AddAddressForm() {
   };
 
   /* 🚀 Submit */
-  const submitAddress = () => {
-    dispatch(addAddress(form)).then((res) => {
-      if (!res.error) {
-        alert("Address added successfully");
+const submitAddress = () => {
+  setErrorMsg("");
+
+  dispatch(addAddress(form)).then((res) => {
+    if (res.meta.requestStatus === "rejected") {
+      if (
+        res.payload === "No token, authorization denied" ||
+        res.payload === "Unauthorized"
+      ) {
+        setErrorMsg("Please login to save your address");
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500);
+      } else {
+        setErrorMsg(res.payload || "Failed to add address");
       }
-    });
-  };
+    } else {
+      alert("Address added successfully");
+      setForm(INITIAL_FORM);
+      setPinMsg("");
+    }
+  });
+};
+
+
 
   return (
     <div className="min-h-screen bg-[#eafff5] px-4 py-20">
@@ -152,14 +175,26 @@ export default function AddAddressForm() {
 
           {/* Landmark */}
           <MintInput label="Landmark (Optional)" name="landmark" value={form.landmark} onChange={handleChange} />
+          
+          {errorMsg && (
+            <p className="text-sm text-red-600 font-medium mt-2">
+              {errorMsg}
+            </p>
+          )}
 
           {/* Submit */}
           <button
             onClick={submitAddress}
-            className="mt-6 w-full py-2.5 rounded-lg text-sm font-medium bg-[#0b6b4f] text-white hover:bg-[#095a42]"
+            disabled={isDisabled}
+            className={`mt-6 w-full py-2.5 rounded-lg text-sm font-medium ${
+              isDisabled
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[#0b6b4f] text-white hover:bg-[#095a42]"
+            }`}
           >
             Save Address
           </button>
+
         </div>
       </div>
     </div>

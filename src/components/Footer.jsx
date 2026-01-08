@@ -60,9 +60,7 @@ const Footer = () => {
               <li>
                 <Link to="/" className="hover:text-amber-300 transition">Home</Link>
               </li>
-              <li>
-                <Link to="/dashboard" className="hover:text-amber-300 transition">Dashboard</Link>
-              </li>
+              
               <li>
                 <span className="text-gray-400 hover:text-amber-300 transition cursor-default">Mobile</span>
               </li>

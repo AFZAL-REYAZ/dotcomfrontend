@@ -11,6 +11,7 @@ export default function AddProduct() {
     name: "",
     mrp: "",
     price: "",
+    stock: "",
     category: "",
     hsnCode: "",
     gst: "",
@@ -106,8 +107,8 @@ export default function AddProduct() {
             </select>
           </div>
 
-          {/* PRICE */}
-          <div className="grid grid-cols-2 gap-4">
+          {/* PRICE + STOCK */}
+          <div className="grid grid-cols-3 gap-4">
             <input
               type="number"
               placeholder="MRP"
@@ -125,7 +126,23 @@ export default function AddProduct() {
               className={inputClass}
               required
             />
+
+            <input
+              type="number"
+              placeholder="Stock Quantity"
+              value={form.stock}
+              min={0}          // ✅ minimum 0
+              max={99}         // ✅ maximum 99
+              onChange={(e) => {
+                const value = Math.max(0, Math.min(99, e.target.value));
+                setForm({ ...form, stock: value });
+              }}
+              className={inputClass}
+              required
+            />
+
           </div>
+
 
           {/* HSN + GST */}
           <div className="grid grid-cols-2 gap-4">

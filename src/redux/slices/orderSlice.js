@@ -3,65 +3,97 @@ import {
   placeOrderThunk,
   getMyOrdersThunk,
   getOrderDetailsThunk,
+  getCheckoutSummaryThunk,
 } from "../thunks/orderThunk";
 
 const orderSlice = createSlice({
   name: "order",
+
   initialState: {
-    loading: false,
+    checkoutSummary: null,
+
+    placingOrder: false,
+    fetchingOrders: false,
+    fetchingOrderDetails: false,
+
     successOrder: null,
     myOrders: [],
     orderDetails: null,
+
     error: null,
   },
 
-  reducers: {},
+  reducers: {
+    clearOrderError: (state) => {
+      state.error = null;
+    },
+    clearSuccessOrder: (state) => {
+      state.successOrder = null;
+    },
+  },
 
   extraReducers: (builder) => {
-    // PLACE ORDER
+    /* ================= CHECKOUT SUMMARY ================= */
+    builder
+      .addCase(getCheckoutSummaryThunk.pending, (state) => {
+        state.fetchingOrders = true;
+      })
+      .addCase(getCheckoutSummaryThunk.fulfilled, (state, action) => {
+        state.fetchingOrders = false;
+        state.checkoutSummary = action.payload;
+      })
+      .addCase(getCheckoutSummaryThunk.rejected, (state, action) => {
+        state.fetchingOrders = false;
+        state.error = action.payload;
+      });
+
+    /* ================= PLACE ORDER ================= */
     builder
       .addCase(placeOrderThunk.pending, (state) => {
-        state.loading = true;
+        state.placingOrder = true;
       })
       .addCase(placeOrderThunk.fulfilled, (state, action) => {
-        state.loading = false;
+        state.placingOrder = false;
         state.successOrder = action.payload.order;
       })
       .addCase(placeOrderThunk.rejected, (state, action) => {
-        state.loading = false;
+        state.placingOrder = false;
         state.error = action.payload;
       });
 
-    // GET MY ORDERS
+    /* ================= GET MY ORDERS ================= */
     builder
       .addCase(getMyOrdersThunk.pending, (state) => {
-        state.loading = true;
+        state.fetchingOrders = true;
       })
       .addCase(getMyOrdersThunk.fulfilled, (state, action) => {
-        state.loading = false;
+        state.fetchingOrders = false;
         state.myOrders = action.payload;
       })
       .addCase(getMyOrdersThunk.rejected, (state, action) => {
-        state.loading = false;
+        state.fetchingOrders = false;
         state.error = action.payload;
       });
 
-    // GET ORDER DETAILS  
+    /* ================= ORDER DETAILS ================= */
     builder
       .addCase(getOrderDetailsThunk.pending, (state) => {
-        state.loading = true;
+        state.fetchingOrderDetails = true;
       })
       .addCase(getOrderDetailsThunk.fulfilled, (state, action) => {
-        state.loading = false;
+        state.fetchingOrderDetails = false;
         state.orderDetails = action.payload;
       })
       .addCase(getOrderDetailsThunk.rejected, (state, action) => {
-        state.loading = false;
+        state.fetchingOrderDetails = false;
         state.error = action.payload;
       });
   },
 });
 
+export const {
+  clearOrderError,
+  clearSuccessOrder,
+} = orderSlice.actions;
+
 export default orderSlice.reducer;
-
-

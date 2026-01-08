@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { motion } from "framer-motion";
+import axiosInstance from "../api/axiosInstance";
 
 const PayWithReward = () => {
   const [formData, setFormData] = useState({
@@ -33,22 +33,20 @@ const PayWithReward = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Mobile number validation (client-side)
+    // 📱 Mobile validation
     if (!/^[6-9]\d{9}$/.test(formData.mobile)) {
-      alert("❌ Please enter a valid 10-digit mobile number (starts with 6-9).");
+      alert("❌ Please enter a valid 10-digit mobile number.");
       return;
     }
 
     try {
-      const res = await axios.post(
-        "https://dotcombackend-xu8o.onrender.com/api/paywithreward",
+      const res = await axiosInstance.post(
+        "/paywithreward",
         formData
       );
 
       if (res.status === 200 || res.status === 201) {
-        alert(
-          `✅ Submited successfully!`
-        );
+        alert("✅ Submitted successfully!");
 
         setFormData({
           name: "",
@@ -58,22 +56,24 @@ const PayWithReward = () => {
         });
       }
     } catch (error) {
-      console.error("Payment error:", error);
+      console.error("PayWithReward error:", error);
       alert("❌ Something went wrong. Please try again.");
     }
   };
 
   return (
-    <div className="min-h-screen flex pt-20 items-center justify-center bg-gradient-to-br from-blue-50 via-white to-amber-50 relative overflow-hidden font-[Poppins] px-4">
+    <div className="min-h-screen flex pt-20 items-center justify-center bg-gradient-to-br from-blue-50 via-white to-amber-50 px-4">
 
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="bg-white shadow-xl rounded-3xl p-8 w-full max-w-lg relative z-10 border border-blue-100"
+        className="bg-white shadow-xl rounded-3xl p-8 w-full max-w-lg border border-blue-100"
       >
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-slate-800">Pay for Reward</h2>
+          <h2 className="text-3xl font-bold text-slate-800">
+            Pay for Reward
+          </h2>
           <p className="text-slate-500 mt-1 text-sm">
             Enter details to earn instant reward coins 💰
           </p>
@@ -93,11 +93,11 @@ const PayWithReward = () => {
               value={formData.name}
               onChange={handleChange}
               placeholder="Enter name"
-              className="w-full border border-gray-300 text-gray-900 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              className="w-full border border-gray-300 text-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
 
-          {/* Mobile Number */}
+          {/* Mobile */}
           <div>
             <label className="block text-gray-600 mb-1 font-medium">
               Mobile Number
@@ -106,11 +106,11 @@ const PayWithReward = () => {
               type="tel"
               name="mobile"
               required
+              maxLength="10"
               value={formData.mobile}
               onChange={handleChange}
               placeholder="Enter 10-digit mobile"
-              maxLength="10"
-              className="w-full border border-gray-300 text-gray-900 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              className="w-full border border-gray-300 text-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
 
@@ -126,7 +126,7 @@ const PayWithReward = () => {
               value={formData.amount}
               onChange={handleChange}
               placeholder="Enter amount"
-              className="w-full border border-gray-300 text-gray-900 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              className="w-full border border-gray-300 text-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none"
             />
 
             {formData.amount && (
@@ -136,7 +136,7 @@ const PayWithReward = () => {
                 className="mt-2 text-sm text-green-700 font-medium"
               >
                 🎉 You will earn {formData.rewardCoins} reward coin
-                {formData.rewardCoins > 1 ? "s" : ""}.
+                {formData.rewardCoins > 1 ? "s" : ""}
               </motion.p>
             )}
           </div>
@@ -150,7 +150,7 @@ const PayWithReward = () => {
               type="text"
               readOnly
               value={formData.rewardCoins}
-              className="w-full bg-gray-50 border border-gray-300 rounded-lg p-3 text-gray-900"
+              className="w-full bg-gray-50 border text-gray-600 border-gray-300 rounded-lg p-3"
             />
           </div>
 

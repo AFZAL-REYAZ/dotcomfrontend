@@ -1,63 +1,81 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "../../api/axiosInstance";
 
-const API = "https://dotcombackend-xu8o.onrender.com/api/products";
-
-// ✅ ADD PRODUCT
+/* =====================================================
+   ✅ ADD PRODUCT (ADMIN)
+===================================================== */
 export const addProductThunk = createAsyncThunk(
   "product/add",
   async (formData, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${API}/add`, formData);
+      const res = await axiosInstance.post(
+        "/products/add",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // ✅ override ONLY here
+          },
+        }
+      );
       return res.data.product;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Add product failed");
+      return rejectWithValue(
+        err.response?.data?.message || "Add product failed"
+      );
     }
   }
 );
 
-// ✅ GET ALL PRODUCTS
+
+/* =====================================================
+   ✅ GET ALL PRODUCTS (WITH FILTERS)
+===================================================== */
 export const fetchProductsThunk = createAsyncThunk(
   "product/getAll",
-  async ({category = "", search = ""}, { rejectWithValue }) => {
+  async ({ category = "", search = "" }, { rejectWithValue }) => {
     try {
-      const res = await axios.get(
-        `${API}?category=${category}&search=${search}`
+      const res = await axiosInstance.get(
+        `/products?category=${category}&search=${search}`
       );
       return res.data.products;
     } catch (err) {
-      return rejectWithValue("Fetch products failed");
+      return rejectWithValue(
+        err.response?.data?.message || "Fetch products failed"
+      );
     }
   }
 );
 
-
-
+/* =====================================================
+   ✅ GET SINGLE PRODUCT
+===================================================== */
 export const fetchSingleProductThunk = createAsyncThunk(
   "product/getOne",
   async (id, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`${API}/${id}`);
+      const res = await axiosInstance.get(`/products/${id}`);
       return res.data.product;
     } catch (err) {
-      return rejectWithValue("Failed to load product");
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to load product"
+      );
     }
   }
 );
 
-
-
-
-
-// ✅ DELETE PRODUCT
+/* =====================================================
+   ✅ DELETE PRODUCT (ADMIN)
+===================================================== */
 export const deleteProductThunk = createAsyncThunk(
   "product/delete",
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`${API}/${id}`);
+      await axiosInstance.delete(`/products/${id}`);
       return id;
     } catch (err) {
-      return rejectWithValue("Delete failed");
+      return rejectWithValue(
+        err.response?.data?.message || "Delete product failed"
+      );
     }
   }
 );

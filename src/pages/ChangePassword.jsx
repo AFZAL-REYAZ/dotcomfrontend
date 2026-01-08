@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { Eye, EyeOff, Lock } from "lucide-react";
+import axiosInstance from "../api/axiosInstance";
 
 export default function ChangePassword() {
   const [form, setForm] = useState({
@@ -25,19 +25,13 @@ export default function ChangePassword() {
     setLoading(true);
 
     try {
-      const res = await axios.put(
-        "https://dotcombackend-xu8o.onrender.com/api/useroutes/change-password",
-        form,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+      const res = await axiosInstance.put(
+        "/useroutes/change-password",
+        form
       );
 
       setMsg(res.data.message || "Password updated successfully");
       setForm({ oldPassword: "", newPassword: "" });
-
     } catch (err) {
       setIsError(true);
       setMsg(

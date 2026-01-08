@@ -1,9 +1,7 @@
-// src/pages/Signup.jsx
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { Eye, EyeOff } from "lucide-react"; // 👁️ icons
+import { Eye, EyeOff } from "lucide-react";
+import axiosInstance from "../api/axiosInstance";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -16,7 +14,7 @@ const Signup = () => {
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // 👁️ toggle
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -31,8 +29,8 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post(
-        "https://dotcombackend-xu8o.onrender.com/api/useroutes/signup",
+      const res = await axiosInstance.post(
+        "/useroutes/signup",
         formData
       );
 
@@ -114,7 +112,6 @@ const Signup = () => {
                 placeholder="Create a password"
               />
 
-              {/* 👁️ Toggle Button */}
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}

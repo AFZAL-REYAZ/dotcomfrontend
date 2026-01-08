@@ -1,53 +1,45 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "../../api/axiosInstance";
 
-const API = "https://dotcombackend-xu8o.onrender.com/api/payment";
-
-// 🟢 Create Razorpay Order
+/* =====================================================
+   🟢 CREATE RAZORPAY ORDER
+===================================================== */
 export const createPaymentOrderThunk = createAsyncThunk(
   "payment/createOrder",
   async ({ amount }, { rejectWithValue }) => {
     try {
-      const res = await axios.post(
-        `${API}/create-order`,
+      const res = await axiosInstance.post(
+        "/payment/create-order",
         { amount },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          timeout: 15000, // ⏱️ 15 seconds MAX
-        }
+        { timeout: 15000 } // ⏱️ 15 sec timeout (mobile safe)
       );
       return res.data;
     } catch (err) {
       if (err.code === "ECONNABORTED") {
         return rejectWithValue(
-          "Payment service is slow. Please try again in a few seconds."
+          "Payment service is slow. Please try again."
         );
       }
-      return rejectWithValue("Failed to create payment order");
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to create payment order"
+      );
     }
   }
 );
 
-
-// 🟢 Verify Payment & Place Order
+/* =====================================================
+   🟢 VERIFY PAYMENT
+===================================================== */
 export const verifyPaymentThunk = createAsyncThunk(
   "payment/verify",
   async (data, { rejectWithValue }) => {
     try {
-      const res = await axios.post(
-        `${API}/verify`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const res = await axiosInstance.post("/payment/verify", data);
       return res.data;
     } catch (err) {
-      return rejectWithValue("Payment verification failed");
+      return rejectWithValue(
+        err.response?.data?.message || "Payment verification failed"
+      );
     }
   }
 );

@@ -1,69 +1,40 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCartThunk } from "../redux/thunks/cartThunk";
-import { deleteAddress, fetchAddresses } from "../redux/thunks/addressThunk";
 import { useNavigate } from "react-router-dom";
-import { placeOrderThunk } from "../redux/thunks/orderThunk";
+
+import { fetchAddresses, deleteAddress } from "../redux/thunks/addressThunk";
+import {
+  getCheckoutSummaryThunk,
+  placeOrderThunk,
+} from "../redux/thunks/orderThunk";
 import {
   createPaymentOrderThunk,
   verifyPaymentThunk,
 } from "../redux/thunks/paymentThunk";
-
-
+import { clearCart } from "../redux/slices/cartSlice";
 
 export default function CheckoutPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.auth);
-  const { items } = useSelector((state) => state.cart);
+
+  /* ================= REDUX STATE ================= */
+  const { checkoutSummary } = useSelector((state) => state.order);
   const { addresses } = useSelector((state) => state.address);
-  const [razorpayOrder, setRazorpayOrder] = useState(null);
+  const { loading: paymentLoading } = useSelector((state) => state.payment);
+
+  /* ================= LOCAL STATE ================= */
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("COD");
-  const { loading } = useSelector((state) => state.payment);
+  const [razorpayOrder, setRazorpayOrder] = useState(null);
   const [paymentOpening, setPaymentOpening] = useState(false);
 
-  const total = items.reduce(
-    (acc, item) => acc + item.product.price * item.quantity,
-    0
-  );
-
-  const discount = Math.floor(total * 0.45);
-  //   const saveMore = 238;
-  const deleveryCharges = 0;
-  const promiseFee = 0;
-
-  const finalAmount = total + promiseFee + deleveryCharges;
-
-
-
+  /* ================= FETCH DATA ================= */
   useEffect(() => {
-    dispatch(fetchCartThunk());
     dispatch(fetchAddresses());
-  }, []);
+    dispatch(getCheckoutSummaryThunk());
+  }, [dispatch]);
 
-  useEffect(() => {
-    if (paymentMethod === "Online" && finalAmount > 0) {
-    console.log("Creating payment order...");
-    dispatch(createPaymentOrderThunk({ amount: finalAmount }))
-      .then((res) => {
-        console.log("Payment order response:", res);
-        if (res.payload) {
-          setRazorpayOrder(res.payload);
-        }
-      });
-  }
-  }, [paymentMethod, finalAmount, dispatch]);
-
-  useEffect(() => {
-    if (paymentMethod === "COD") {
-      setRazorpayOrder(null);
-    }
-  }, [paymentMethod]);
-
-
-
-
+  /* ================= AUTO SELECT DEFAULT ADDRESS ================= */
   useEffect(() => {
     if (addresses.length > 0) {
       const defaultAddr = addresses.find((a) => a.isDefault);
@@ -73,14 +44,51 @@ export default function CheckoutPage() {
 
 
 
+  /* ================= PRICE DATA FROM BACKEND ================= */
+  const {
+  items = [],
+  price = {},
+} = checkoutSummary || {};
 
+const {
+  subTotal = 0,
+  deliveryCharge = 0,
+  promiseFee = 0,
+  cgst = 0,
+  sgst = 0,
+  grandTotal = 0,
+} = price || {};
+
+  const finalAmount = grandTotal;
+
+  /* ================= CREATE RAZORPAY ORDER ================= */
+  useEffect(() => {
+    if (paymentMethod === "Online" && finalAmount > 0) {
+      dispatch(createPaymentOrderThunk({ amount: finalAmount })).then((res) => {
+        if (res.payload) {
+          setRazorpayOrder(res.payload);
+        }
+      });
+    }
+  }, [paymentMethod, finalAmount, dispatch]);
+
+  useEffect(() => {
+    if (paymentMethod === "COD") {
+      setRazorpayOrder(null);
+    }
+  }, [paymentMethod]);
+
+  if (!checkoutSummary) {
+    return <p className="mt-10 text-center text-gray-600">Loading checkout…</p>;
+  }
+  /* ================= PLACE ORDER ================= */
   const placeOrder = () => {
     if (!selectedAddress) {
       alert("Please select a delivery address");
       return;
     }
 
-    // 🔴 CASH ON DELIVERY
+    // 🔴 COD
     if (paymentMethod === "COD") {
       dispatch(
         placeOrderThunk({
@@ -88,17 +96,22 @@ export default function CheckoutPage() {
           paymentMethod: "COD",
         })
       ).then((res) => {
-        if (!res.error) navigate("/order-success");
+        if (!res.error){
+          dispatch(clearCart());
+          navigate("/order-success");
+        }
       });
       return;
     }
 
-    // 🟢 ONLINE PAYMENT (MOBILE SAFE)
+    // 🟢 ONLINE
     if (!razorpayOrder) {
-      alert("Payment is preparing, please wait...");
+      alert("Preparing payment, please wait...");
       return;
     }
 
+    if (paymentOpening) return;
+    setPaymentOpening(true);
 
     const options = {
       key: import.meta.env.VITE_RAZORPAY_KEY,
@@ -119,221 +132,140 @@ export default function CheckoutPage() {
           })
         );
         setPaymentOpening(false);
+        dispatch(clearCart()); 
         navigate("/order-success");
       },
 
       theme: { color: "#000000" },
     };
 
-    if (paymentOpening) return;
-    setPaymentOpening(true);
-
     if (!window.Razorpay) {
-      alert("Payment service not loaded. Please refresh and try again.");
+      alert("Payment service not loaded");
       setPaymentOpening(false);
       return;
     }
 
     const rzp = new window.Razorpay(options);
-
     rzp.on("payment.failed", () => {
-      alert("Payment failed or cancelled");
+      alert("Payment failed");
       setPaymentOpening(false);
     });
 
-    // 🔥 force immediate execution in same click stack
-setTimeout(() => {
-  rzp.open();
-}, 0);
-
+    rzp.open();
   };
 
-
-
   return (
-    <div className="max-w-4xl mx-auto pt-20 p-6 bg-white min-h-screen text-black">
+    <div className="max-w-4xl mx-auto pt-20 p-6">
 
-      {/* PAGE TITLE */}
-      <h1 className="text-3xl font-bold mb-6">Checkout</h1>
-
-      {/* ============================
-            ADDRESS SECTION
-      ============================ */}
+      {/* ================= ADDRESS ================= */}
       <section className="mb-8">
-        <h2 className="text-xl font-semibold mb-3">Delivery Address</h2>
+        <div className="flex justify-between mb-3 text-gray-600">
+          <h2 className="text-xl font-semibold text-gray-600">Delivery Address</h2>
+          <button
+            onClick={() => navigate("/add-address")}
+            className="px-4 py-2 border rounded text-gray-600"
+          >
+            + Add Address
+          </button>
+        </div>
 
-        {addresses.length === 0 ? (
-          <div className="text-center py-8 border rounded-xl bg-gray-50">
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/484/484167.png"
-              className="w-10 mx-auto opacity-80"
-              alt="No Address"
+        {addresses.map((address) => (
+          <label
+            key={address._id}
+            className={`flex gap-4 p-4 border rounded mb-3 text-gray-600 cursor-pointer ${
+              selectedAddress === address._id
+                ? "border-black bg-gray-100"
+                : ""
+            }`}
+          >
+            <input
+              type="radio"
+              checked={selectedAddress === address._id}
+              onChange={() => setSelectedAddress(address._id)}
             />
-            <h3 className="text-xl font-semibold mt-4">No Saved Address</h3>
-            <p className="text-gray-600 mt-1">
-              Add an address to continue your order.
-            </p>
-
+            <div className="flex-1 text-gray-600">
+              <p className="font-semibold ">{address.fullName}</p>
+              <p>{address.houseNo}, {address.area}</p>
+              <p>{address.city}, {address.state} - {address.pincode}</p>
+              <p className="text-sm">Phone: {address.phone}</p>
+            </div>
             <button
-              onClick={() => navigate("/add-address")}
-              className="mt-5 px-6 py-3 bg-black text-white rounded-lg font-semibold hover:bg-gray-900 transition"
+              onClick={(e) => {
+                e.preventDefault();
+                dispatch(deleteAddress(address._id));
+              }}
+              className="text-red-600 text-sm"
             >
-              Add New Address
+              Remove
             </button>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {addresses.map((address) => (
-              <label
-                key={address._id}
-                className={`border p-4 rounded-xl flex gap-4 cursor-pointer shadow-sm 
-                  transition ${selectedAddress === address._id
-                    ? "border-black bg-gray-100"
-                    : "border-gray-300"
-                  }`}
-              >
-                <input
-                  type="radio"
-                  name="address"
-                  checked={selectedAddress === address._id}
-                  onChange={() => setSelectedAddress(address._id)}
-                  className="mt-1"
-                />
-
-                <div>
-                  <p className="font-semibold">{address.fullName}</p>
-                  <p>{address.houseNo}, {address.area}</p>
-                  <p>{address.city}, {address.state} - {address.pincode}</p>
-                  <p className="text-gray-600">Phone: {address.phone}</p>
-
-                  {address.isDefault && (
-                    <span className="text-xs bg-green-600 text-white px-2 py-1 rounded mt-2 inline-block">
-                      Default
-                    </span>
-                  )}
-                </div>
-
-                <button
-                  onClick={() => dispatch(deleteAddress(address._id))}
-                  className="text-red-600 text-sm ml-auto"
-                >
-                  Remove
-                </button>
-              </label>
-            ))}
-          </div>
-        )}
+          </label>
+        ))}
       </section>
 
-      {/* ============================
-            ORDER SUMMARY (Flipkart Style)
-      ============================ */}
-      <section className="mt-10">
-        <h2 className="text-xl font-semibold mb-3">Order Summary</h2>
-
-        {/* Product List */}
-        {items.map((item) => (
-          <div key={item._id} className="flex items-center justify-between gap-4 py-4 border-b">
-            <img
-              src={item.product.image[0]}
-              className="w-20 h-20 rounded object-cover"
-            />
-            <div className="flex-1">
-              <p className="font-semibold text-gray-800">{item.product.name}</p>
-              <p className="text-gray-500 text-sm">
-                Qty: {item.quantity}
-              </p>
-            </div>
-
-            <p className="font-medium text-gray-900">
-              ₹{item.product.price * item.quantity}
-            </p>
+      {/* ================= ITEMS ================= */}
+      <section className="mb-8 text-gray-600">
+        <h2 className="text-xl font-semibold mb-3">Order Items</h2>
+        {items.map((item, i) => (
+          <div key={i} className="flex justify-between border-b py-3">
+            <span>{item.name} × {item.quantity}</span>
+            <span>₹{item.total}</span>
           </div>
         ))}
+      </section>
 
-        {/* Price Details Box */}
-        <div className="bg-gray-50 rounded-xl border border-gray-200 mt-8">
-          <div className="px-4 py-3 border-b">
-            <h3 className="font-semibold text-lg">Price Details</h3>
-          </div>
+      {/* ================= PRICE ================= */}
+      <section className="bg-gray-50 p-5 rounded text-gray-600">
+        <Row label="Subtotal" value={subTotal} />
+        <Row label="Delivery Charges" value={deliveryCharge} />
+        <Row label="CGST (9%)" value={cgst} />
+        <Row label="SGST (9%)" value={sgst} />
 
-          <div className="px-4 py-3 text-gray-700 space-y-3">
+        {promiseFee > 0 && (
+          <Row label="Promise Fee" value={promiseFee} />
+        )}
 
-            <div className="flex justify-between">
-              <span>Price ({items.length} items)</span>
-              <span>₹{total}</span>
-            </div>
+        <hr className="my-3" />
 
-            <div className="flex justify-between">
-              <span>Delevery Charges</span>
-              <span className="text-green-600 font-semibold">₹ {deleveryCharges}</span>
-            </div>
+        <Row label="Grand Total" value={grandTotal} bold />
 
 
-            <div className="flex justify-between">
-              <span>Protect Promise Fee</span>
-              <span>₹{promiseFee}</span>
-            </div>
+        {/* ================= PAYMENT ================= */}
+        <div className="mt-6 space-y-3">
+          <label className="flex gap-3">
+            <input
+              type="radio"
+              checked={paymentMethod === "COD"}
+              onChange={() => setPaymentMethod("COD")}
+            />
+            Cash on Delivery
+          </label>
 
-            <hr />
-
-            <div className="flex justify-between text-xl font-bold">
-              <span>Total Amount</span>
-              <span>₹{finalAmount}</span>
-            </div>
-          </div>
-
-          <div className="bg-green-50 text-green-700 text-center py-3 font-semibold text-sm border-t">
-            {/* 🎉 You'll save ₹{discount + saveMore + coupons} on this order! */}
-            🎉 You'll earn 1 Super Gold Coin on every 100 rupees
-          </div>
+          <label className="flex gap-3">
+            <input
+              type="radio"
+              checked={paymentMethod === "Online"}
+              onChange={() => setPaymentMethod("Online")}
+            />
+            Online Payment
+          </label>
         </div>
+
+        <button
+          onClick={placeOrder}
+          disabled={paymentLoading}
+          className="w-full mt-4 bg-black text-white py-3 rounded"
+        >
+          {paymentMethod === "COD" ? "Place Order" : "Proceed to Pay"}
+        </button>
       </section>
-
-      {/* ============================
-            PAYMENT
-      ============================ */}
-      <section className="mt-10">
-        <h2 className="text-xl font-semibold mb-3">Payment Method</h2>
-
-        <label className="flex items-center gap-2 mb-2">
-          <input
-            type="radio"
-            name="payment"
-            checked={paymentMethod === "COD"}
-            onChange={() => setPaymentMethod("COD")}
-          />
-          Cash on Delivery (COD)
-        </label>
-
-        <label className="flex items-center gap-2">
-          <input
-            type="radio"
-            name="payment"
-            checked={paymentMethod === "Online"}
-            onChange={() => setPaymentMethod("Online")}
-          />
-          Online Payment method
-        </label>
-      </section>
-
-      {/* PLACE ORDER BUTTON */}
-      <button
-        onClick={placeOrder}
-        disabled={
-          (paymentMethod === "Online" && !razorpayOrder) || paymentOpening
-        }
-        className="w-full mt-10 py-4 bg-black text-white rounded-lg text-lg font-semibold disabled:opacity-60"
-      >
-        {paymentOpening
-          ? "Opening Payment..."
-          : paymentMethod === "Online" && !razorpayOrder
-            ? "Preparing Payment..."
-            : "Place Order"}
-      </button>
-
     </div>
   );
 }
 
-
+/* ================= ROW ================= */
+const Row = ({ label, value, bold }) => (
+  <div className={`flex justify-between mb-2 ${bold ? "font-bold" : ""}`}>
+    <span>{label}</span>
+    <span>₹{Number(value).toFixed(2)}</span>
+  </div>
+);

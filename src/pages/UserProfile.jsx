@@ -6,7 +6,6 @@ import {
   MdLocationOn,
   MdOutlineShoppingBag,
   MdArrowForwardIos,
-  MdNotificationsNone,
   MdHelpOutline,
   MdQuestionAnswer,
   MdGavel,
@@ -88,7 +87,7 @@ const UserProfile = () => {
       <div className="bg-white rounded-2xl shadow-sm mx-4 mt-4 p-4 grid grid-cols-2 gap-3">
         <div
           className="flex flex-col items-center py-3 border-r border-gray-200 cursor-pointer"
-          onClick={() => navigate("/add-address")}
+          onClick={() => navigate("/saved-addresses")}
         >
           <MdLocationOn className="text-2xl text-gray-700" />
           <span className="mt-2 text-sm text-gray-600 font-medium">Manage Address</span>
@@ -130,6 +129,7 @@ const UserProfile = () => {
           // { label: "Notification Center", icon: <MdNotificationsNone />, path: "/change-password", },
           { label: "Help and Support", icon: <MdHelpOutline />, path: "/contact-us", },
           { label: "Change Password", icon: <MdQuestionAnswer />, path: "/change-password", },
+          { label: "Saved-Addresses", icon: <MdQuestionAnswer />, path: "/saved-addresses", },
           { label: "Terms & conditions", icon: <MdGavel />, path: "/terms-conditions", },
           { label: "Get in touch", icon: <MdCall />, path: "/contact-us", },
         ].map((item, idx) => (

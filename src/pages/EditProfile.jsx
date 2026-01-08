@@ -1,21 +1,18 @@
-// src/pages/EditProfile.jsx
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
+import axiosInstance from "../api/axiosInstance";
 import { setUser } from "../redux/slices/authSlice.js";
 
 const EditProfile = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Get user from Redux store
   const user = useSelector((state) => state.auth.user);
 
   const [formData, setFormData] = useState({
     name: user?.name || "",
-    mobile: user?.mobile || "",     
+    mobile: user?.mobile || "",
   });
 
   const [avatarFile, setAvatarFile] = useState(null);
@@ -34,11 +31,13 @@ const EditProfile = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (!["image/png", "image/jpeg", "image/jpg"].includes(file.type))
+    if (!["image/png", "image/jpeg", "image/jpg"].includes(file.type)) {
       return alert("Only PNG/JPG allowed");
+    }
 
-    if (file.size > 2 * 1024 * 1024)
+    if (file.size > 2 * 1024 * 1024) {
       return alert("Max 2MB allowed");
+    }
 
     setAvatarFile(file);
     setPreview(URL.createObjectURL(file));
@@ -49,20 +48,16 @@ const EditProfile = () => {
     setLoading(true);
 
     try {
-      const token = localStorage.getItem("token");
-
       const fd = new FormData();
       fd.append("name", formData.name);
-      fd.append("mobile", formData.mobile); // 
-
+      fd.append("mobile", formData.mobile);
       if (avatarFile) fd.append("avatar", avatarFile);
 
-      const res = await axios.put(
-        "https://dotcombackend-xu8o.onrender.com/api/useroutes/update-profile",
+      const res = await axiosInstance.put(
+        "/useroutes/update-profile",
         fd,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
         }
@@ -70,13 +65,13 @@ const EditProfile = () => {
 
       const updatedUser = res.data.updatedUser;
 
-      // Update Redux store instantly
+      // 🔥 Update Redux instantly
       dispatch(setUser(updatedUser));
 
       alert("Profile updated successfully!");
       navigate("/profile");
     } catch (err) {
-      console.log(err);
+      console.error(err);
       alert(err.response?.data?.message || "Profile update failed");
     } finally {
       setLoading(false);
@@ -88,6 +83,7 @@ const EditProfile = () => {
       <h2 className="text-2xl font-bold text-center mb-6">Edit Profile</h2>
 
       <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Avatar */}
         <div className="flex flex-col items-center">
           <img
             src={preview}
@@ -96,11 +92,19 @@ const EditProfile = () => {
           />
 
           <label className="mt-3 cursor-pointer text-sm text-gray-700">
-            <input type="file" accept="image/*" onChange={handleFile} className="hidden" />
-            <span className="px-3 py-1 bg-gray-50 border rounded-lg">Change Photo</span>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFile}
+              className="hidden"
+            />
+            <span className="px-3 py-1 bg-gray-50 border rounded-lg">
+              Change Photo
+            </span>
           </label>
         </div>
 
+        {/* Name */}
         <div>
           <label className="text-gray-700 font-medium">Full Name</label>
           <input
@@ -113,6 +117,7 @@ const EditProfile = () => {
           />
         </div>
 
+        {/* Mobile */}
         <div>
           <label className="text-gray-700 font-medium">Mobile Number</label>
           <input
